@@ -1,0 +1,1772 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{ulem}
+\usepackage{graphicx}
+\usepackage{titlepic}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{caption}
+\usepackage[colorlinks = true,
+linkcolor = blue,
+urlcolor = blue,
+citecolor = blue,
+anchorcolor = blue]{hyperref}
+\usepackage[margin=2.5 cm,includehead,includefoot]{geometry} %Til at ændre marginen
+\newcommand{\R}{\mathbb{R}}
+
+\title{\\ }
+\author{Oscar Ernst Alfthan Madsen}
+\date{5. sep 2024}
+\chead{}
+\lhead{Sand stat - hold 3
+\\ Oscar Ernst Alfthan Madsen}
+\rhead{Sandsynlighedsteori og statistik\\ 7 Semester 2024}
+\lfoot{}
+\cfoot{{Side \thepage \hspace{1pt} af \pageref{LastPage}}}
+\rfoot{}
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0.5pt}
+\fancyhfoffset{\evensidemargin}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children no
+\language english
+\language_package default
+\inputencoding auto-legacy
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Section
+Introduction
+\end_layout
+
+\begin_layout Section
+Intuition and basics
+\end_layout
+
+\begin_layout Itemize
+This section introduces the intuition behind local projections (LPs) for estimating impulse responses—
+that is,
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+How an intervention or shock affects an outcome variable over time.
+ It explains the setup,
+ defines the impulse response formally,
+ and shows how LPs connect to traditional VAR methods while highlighting their advantages.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+
+\series bold
+Variables and Setup:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Outcome variable 
+\begin_inset Formula $\left(y_{t}\right)$
+\end_inset
+
+:
+ 
+\series default
+The variable of interest whose evolution over time we wish to study.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Controls 
+\begin_inset Formula $\left(x_{t}\right)$
+\end_inset
+
+:
+ 
+\series default
+Is a vector of exogenous variables:
+ This typically includes (lags of the outcome variable i.e.
+ 
+\begin_inset Formula $y_{t-1}$
+\end_inset
+
+ and lags of policy intervention.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Policy intervention 
+\begin_inset Formula $\left(s_{t}\right)$
+\end_inset
+
+:
+ 
+\series default
+Represent an exogenous shock or treatment (e.g.,
+ a nautral disaster a suprise interst rate hike,
+ or a policy change for instance.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Instruments 
+\begin_inset Formula $\left(z_{t}\right):$
+\end_inset
+
+ 
+\series default
+If avaliable,
+ these serve as instrument for 
+\begin_inset Formula $s_{t}$
+\end_inset
+
+,
+ to help identify the causal effect when 
+\begin_inset Formula $s_{t}$
+\end_inset
+
+ might not be exogenous.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Defining the Impulse Response:
+\end_layout
+
+\begin_layout Itemize
+The impulse response measures the effect of an intervention today on the expected outcome at some future horizon 
+\begin_inset Formula $h$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Formal definition:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+R_{s\rightarrow y}\left(h,\delta\right)=\mathbb{E}\left[y_{t+h}\mid s_{t}=s_{0}+\delta,x_{t}\right]-\mathbb{E}\left[y_{t+h}\mid s_{t}=s_{0},x_{t}\right],h=0,1,...,H
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Where we have:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $\delta$
+\end_inset
+
+ is the size of the intervention (typically normalized to 
+\begin_inset Formula $\delta=1$
+\end_inset
+
+ (e.g.
+ a 1% shock).
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+Linear models:
+
+\series default
+ The baseline level 
+\begin_inset Formula $s_{0}$
+\end_inset
+
+ cancels out,
+ so the impulse sponse depends only on 
+\begin_inset Formula $\delta$
+\end_inset
+
+ and not on 
+\begin_inset Formula $s_{0}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Nonlineaer models:
+
+\series default
+ The baseline can influece the margintue of the response.
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+As 
+\begin_inset Formula $\delta\rightarrow0$
+\end_inset
+
+,
+ the ratio 
+\begin_inset Formula $\frac{R_{s\rightarrow y}\left(h,\delta\right)}{\delta}$
+\end_inset
+
+ approximates a derivative - mirroring the interpretation in VAR-based impulse responses.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+Baseline LP and LP-IV
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+The Local Projection Regression Framework:
+\end_layout
+
+\begin_layout Itemize
+LPs estimate the impulse sponse directly by running separate regressions for each horizon 
+\begin_inset Formula $h$
+\end_inset
+
+.
+ The equation is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y_{t+h}=\alpha_{h}+\beta_{h}s_{t}+\gamma_{h}^{\prime}x_{t}+v_{t+h}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $y_{t+h}$
+\end_inset
+
+:
+ Outcome variable at horizon 
+\begin_inset Formula $h$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $s_{t}$
+\end_inset
+
+:
+ The policy intervention or shock at time 
+\begin_inset Formula $t$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $x_{t}:$
+\end_inset
+
+ A vector of control variables (inclunding lags of 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+ and 
+\begin_inset Formula $s_{t}$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\alpha_{h},\beta_{h},\gamma_{h}$
+\end_inset
+
+:
+ Regression coefficeints,
+ with 
+\begin_inset Formula $\beta_{h}$
+\end_inset
+
+ directly interpreted as the impulse response at horizon h.
+ I.e.
+ 
+\begin_inset Formula $R_{s\rightarrow y}\left(h\right)=\beta_{h}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $v_{t+h}$
+\end_inset
+
+ is the error term.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+LP-OLS:
+\end_layout
+
+\begin_layout Itemize
+If we assume that 
+\begin_inset Formula $E\left(s_{t},v_{t+h}\right)=0$
+\end_inset
+
+ (i.e.
+ the shock 
+\begin_inset Formula $s_{t}$
+\end_inset
+
+ is exogneous),
+ LP is identified and can be estimated using OLS.
+ The estimated coefficient 
+\begin_inset Formula $\hat{\beta}_{h}$
+\end_inset
+
+ provides a direct estimate of the impulse response.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+LP-IV:
+\end_layout
+
+\begin_layout Itemize
+If 
+\begin_inset Formula $s_{t}$
+\end_inset
+
+ is not exogneous,
+ then instruments 
+\begin_inset Formula $z_{t}$
+\end_inset
+
+ (variables that affect 
+\begin_inset Formula $s_{t}$
+\end_inset
+
+ but are uncorrelated with the error 
+\begin_inset Formula $v_{t+h}$
+\end_inset
+
+) are needed .
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Estimation:
+
+\series default
+ The regression can be estimated using instrumental variables methodi.
+\end_layout
+
+\begin_layout Subsubsection
+Advantages of LP framework:
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Semi-parametric estimation:
+\end_layout
+
+\begin_layout Itemize
+A different regression is estimated for each horizon 
+\begin_inset Formula $h$
+\end_inset
+
+,
+ allowing for a semi parametric approximation of the conditional mean:
+ 
+\begin_inset Formula $R_{s\rightarrow y}\left(h\right)=\beta_{h}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+This approach does not require specifying a full model for the dynamic evolution of 
+\begin_inset Formula $y_{t},s_{t},x_{t},z_{t}$
+\end_inset
+
+ over time.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Serial correlation of residuals:
+\end_layout
+
+\begin_layout Itemize
+The error term 
+\begin_inset Formula $v_{t+h}$
+\end_inset
+
+ is likely to be serially correlated up to 
+\begin_inset Formula $h$
+\end_inset
+
+ lags.
+ 
+\end_layout
+
+\begin_layout Itemize
+Although this serial correlation does not affect the consistency of the estimator for 
+\begin_inset Formula $\beta_{h}$
+\end_inset
+
+ ,
+ is has implications for inference,
+ especially in small samples.
+\end_layout
+
+\begin_layout Subsubsection
+Implications of linearity:
+\end_layout
+
+\begin_layout Standard
+Under the assumptions of linearity,
+ several propoerties hold that may not be immediatiely obvious:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Symmetric effects:
+
+\series default
+ 
+\begin_inset Formula $R_{s\rightarrow y}\left(h,q\right)=-R_{s\rightarrow y}\left(h,-\delta\right)$
+\end_inset
+
+.
+ I.e.
+ a positive shock has the same magnitude but opposite effect compared to a negative shock.
+ For example a increase in the intereste rate reduces inflation by the same amount that a decrease boosts inflation.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+State independence:
+ 
+\series default
+
+\begin_inset Formula $R_{s\rightarrow y}\left(h,\delta\mid x\right)=R_{s\rightarrow y}\left(h,\delta\right)$
+\end_inset
+
+.
+ The reponse does not depend on the recent history (or state) captuted in 
+\begin_inset Formula $x_{t}$
+\end_inset
+
+.
+ I.e.
+ a shock during recession would have the same effect as in an expansion.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Prorportionality:
+ 
+\series default
+
+\begin_inset Formula $R_{s\rightarrow y}\left(h,\delta\right)=\delta R_{s\rightarrow y}\left(h\right)=\delta\beta_{h}$
+\end_inset
+
+.
+ Doubling the size of the shock doubles the response.
+\end_layout
+
+\begin_layout Subsection
+LP in relation to VAR:
+\end_layout
+
+\begin_layout Subsubsection
+Rationale for using Local Projections
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Minimal Assumptions:
+
+\series default
+ The LP framewokr estimates the conditional mean response at each horizon without requiring a full specification of the entire dynamic system.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Large sample Equivalence:
+ 
+\series default
+Jorda (2005) and later Plagborg-Møller and Wolf (2021),
+ shows that under relatively mild conditions,
+ the IPRfrom LPs are equivalent to those from an infinite-order VAR.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Flexibility:
+ 
+\series default
+Since each forecast is estimated via separate regressions,
+ the approach is semi-parametric.
+ It approximates the conditional mean for each horizon without imposing a rigid,
+ global structure of the entire dynamic process (like VAR).
+\end_layout
+
+\begin_layout Subsubsection
+Illustration via a VAR(1) example.
+\end_layout
+
+\begin_layout Standard
+To illustrate the equivalence,
+ consider a simple first-order VAR in difference.
+ Suppose that a 
+\begin_inset Formula $k\times1$
+\end_inset
+
+ vector 
+\begin_inset Formula $\Delta w_{t}$
+\end_inset
+
+ fwollows a stationry VAR(1) process
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta w_{t}=\Phi\Delta w_{t-1}+u_{t},u_{t}\sim D\left(0,\Omega_{u}\right);\left|\lambda_{l}\left(\Phi\right)\right|<0,l=1,...,k
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Key assumptions:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The constant and deterministic terms (like time trends) are omitted for convenice.
+\end_layout
+
+\begin_layout Itemize
+The eigenvalues 
+\begin_inset Formula $\lambda_{l}\left(\Phi\right)$
+\end_inset
+
+ of the matrix 
+\begin_inset Formula $\Phi$
+\end_inset
+
+ lie inside the unit circle,
+ ensuring stationarity.
+ 
+\end_layout
+
+\begin_layout Itemize
+The error term,
+ 
+\begin_inset Formula $u_{t}$
+\end_inset
+
+,
+ is assumed to be white noice with a diagonal covariance matrix 
+\begin_inset Formula $\Omega_{u}$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection
+Deriving the Impulse Response
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Recursive substitution and the Wold representation:
+\end_layout
+
+\begin_layout Itemize
+Propagating the process forward by recursive substitution gives:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta w_{t+h}=\Phi^{h+1}\Delta w_{t-1}+u_{t+h}+\Phi u_{t+h-1}+...+\Phi^{h}u_{t},h=1,...,H
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+If we let 
+\begin_inset Formula $H\rightarrow∞$
+\end_inset
+
+ (and given that 
+\begin_inset Formula $||\Phi^{∞}||\rightarrow0$
+\end_inset
+
+),
+ we obtain the well-known Wold representation:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula 
+\[
+\Delta w_{t}=u_{t}+\Phi u_{t-1}+\Phi^{2}u_{t-2}+...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Shock propagation:
+\end_layout
+
+\begin_layout Itemize
+This representation makes clear how a shock propagates through the system.
+ The impact of a shock 
+\begin_inset Formula $u_{jt}$
+\end_inset
+
+ on 
+\begin_inset Formula $\Delta w_{t+h}$
+\end_inset
+
+ is given by:
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\partial\Delta w_{t+h}}{\partial u_{t}}=\Phi^{h}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Focusing on the element-wise element,
+ if we denote 
+\begin_inset Formula $e_{i}$
+\end_inset
+
+,
+ as the 
+\begin_inset Formula $i$
+\end_inset
+
+th unit vector,
+ then:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\partial\Delta w_{i,t+h}}{\partial u_{j,t}}=\left(e_{i}\Phi^{h}e_{j}^{\prime}\right)\equiv\phi_{ij}^{(h)}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Thus,
+ the impulse response of variable 
+\begin_inset Formula $i$
+\end_inset
+
+ to a shock in variable 
+\begin_inset Formula $j$
+\end_inset
+
+ with size 
+\begin_inset Formula $\delta$
+\end_inset
+
+ is:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula 
+\[
+R_{j\rightarrow i}\left(h,\delta\right)=e_{i}\Phi^{h}e_{j}^{\prime}\delta=\phi_{ij}^{\left(h\right)}\delta
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Comments and caveats
+\end_layout
+
+\begin_layout Subsubsection
+Estimation of Impulse Responses
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Direct estimation in VARS:
+\end_layout
+
+\begin_layout Itemize
+Estimating the impulse repsponse in VARS appears straightforward.
+ It requires:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Estimating the VAR.
+\end_layout
+
+\begin_layout Itemize
+Applyng a transformation to the esitmated coefficient matrix 
+\begin_inset Formula $\Phi$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+
+\series bold
+Alternative estimation via LPs:
+\end_layout
+
+\begin_layout Itemize
+Alternative,
+ one can directly estimate:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $R_{j\rightarrow i}\left(h,\delta\right)$
+\end_inset
+
+ by running a univariate regression of the first difference 
+\begin_inset Formula $\Delta w_{i,t+h}$
+\end_inset
+
+ on 
+\begin_inset Formula $\Delta w_{j,t}$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection
+Inference and asymtotic considerations
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+VAR inference:
+\end_layout
+
+\begin_layout Itemize
+Asymtotic results for VAR-based IPR are well established,
+ often relying on delta-method.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Small Sample Bias:
+ 
+\series default
+Even stationary VARs suffer from small sample biases,
+ as shown in studies by Nicholass and Pope (1988) and Pope (1990).
+ These biases become particularly prononunced in small samples or when processes are highly persistent.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+LP inference:
+\end_layout
+
+\begin_layout Itemize
+in LPs,
+ the coefficent estimates themselves are the impulse response estimates.
+\end_layout
+
+\begin_layout Itemize
+Inference is also straightforward in large samples,
+ but adjustment for serial corelation (which typically inflates standard errors) are necessary.
+\end_layout
+
+\begin_layout Itemize
+LPs like VARs,
+ may ecnounter samll samples issues,
+ alotugh these can be mitigated in many cases.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Lag-length Selection
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Challange in Selecting Lags:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+There is no widely accepted method for choosing the optimal number of lags in LPs,
+ partircularly because:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Standard selection criteria may not be valid when residuals are autocorrelated (which is common when 
+\begin_inset Formula $h>1$
+\end_inset
+
+).
+ 
+\end_layout
+
+\begin_layout Itemize
+A natural approach is to use information criteria for the first-horizon LP (which is equivalent to a VAR equation),
+ and the naplly the same lag length for subsequent horizons.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+Lag augmentation:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Some inference procedures suggest adding an extra lag (lag-augmentation),
+ to adress potential misspecifiation.
+ 
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Subsubsection
+Robustness and Bias Consideration 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Robustness of LPs:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+LP tends to be more forgiving when the lag length is not correctly specified.
+\end_layout
+
+\begin_layout Itemize
+Jorda,
+ singh and Taylor (2024) show that for infinite-order processes,
+ LPs exhibit lower bias than VARs at horizons excedding the optimal tructuation lag.
+\end_layout
+
+\begin_layout Itemize
+This is because the IPR coefficient is estimated directly in a LP - therfore,
+ small misspecifications erros do not compound as they do in VARs.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+\begin_inset Quotes eld
+\end_inset
+
+Doubly Robust
+\begin_inset Quotes erd
+\end_inset
+
+ Property:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Plagborg-Møller,
+ Montiel-Olea,
+ Qian,
+ and Wolf (2024) demonstates that while VAR confidence intervals may undercover even with minor,
+ hard-to-detect misspecification,
+ LPs maintiain correct coverage.
+\end_layout
+
+\begin_layout Itemize
+This gives LPs doubly robust characteristics,
+ where they have lower bias and reliable inference in the pressence of misspecification.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Specification choice:
+ Levels versus long differences
+\end_layout
+
+\begin_layout Subsection
+Stationary case
+\end_layout
+
+\begin_layout Standard
+In this section,
+ the authors discuss the choice between two common LP specifications for estimating impulse responses:
+ one in levels and one in long differences.
+ They illustrate how both approaches are asymptotically equivalent,
+ yet in small samples the long difference specification can substantially reduce bias—
+especially when autocorrelation is present.
+\end_layout
+
+\begin_layout Subsubsection
+Level specification
+\end_layout
+
+\begin_layout Standard
+The levels specification uses the ourfmce variable in level.
+ The regression for each horiozno h is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y_{t+h}=\alpha_{h}^{L}+\beta_{h}^{L}s_{t}+\gamma_{h}^{L}y_{t-1}+u_{t+h}^{L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Interpretaion:
+ 
+\series default
+The estimated coefficient 
+\begin_inset Formula $\hat{\beta}^{L}$
+\end_inset
+
+ provides the impulse responses in level,
+ i.e.:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{R}_{sy}^{L}\left(h\right)=\hat{\beta}_{h}^{L}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Long-difference specification
+\end_layout
+
+\begin_layout Standard
+The long-difference specification instead uses the change in the outcome frmo one period to a future period.
+ Define long differences as:
+ 
+\begin_inset Formula $\Delta^{h}y_{t+h}\equiv y_{t+h}-y_{t-1}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Then the regression is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Delta^{h}y_{t+h}=\alpha_{h}^{LD}+\beta_{h}^{LD}s_{t}+\gamma_{h}^{LD}\Delta y_{t-1}+u_{t+h}^{LD}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Interpretation:
+
+\series default
+ The estimated coefffcient 
+\begin_inset Formula $\hat{\beta}_{h}^{LD}$
+\end_inset
+
+ provides the impulse reponses based on the long difference:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\hat{R}_{sy}^{LD}\left(h\right)=\hat{\beta}_{h}^{LD}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Asymtptotic equivalence
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Theorical result:
+ 
+\end_layout
+
+\begin_layout Itemize
+As the sample size 
+\begin_inset Formula $T\rightarrow∞$
+\end_inset
+
+ both the levels and log-diff will recover the true impulse responses.
+ In our example,
+ if the true DGP for 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+ is give nby:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y_{t}=\alpha+s_{t}+\rho y_{t-1}+\varepsilon_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+With 
+\begin_inset Formula $\rho\in\left(0,1\right)$
+\end_inset
+
+,
+ and 
+\begin_inset Formula $s_{t},\varepsilon_{t}\overset{i.i.d}{\sim}N\left(0,1\right)$
+\end_inset
+
+,
+ then the true impulse responses for at unit shock is:
+ 
+\begin_inset Formula $R_{sy}\left(h\right)=\rho^{h}$
+\end_inset
+
+.¨¨
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Implications:
+
+\series default
+ Both LP specifications are consistent and would yield the correct IPR in large samples.
+\end_layout
+
+\begin_layout Subsubsection
+
+\series bold
+Samle sample bias
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Problem of Bias:
+\end_layout
+
+\begin_layout Itemize
+In small samples,
+ estimators in AR models are known to suffer frmo downward bias due to autocorrelation.
+ This has been documented in early studies (Orcutt,
+ Marriott and Pope,
+ Kendall) and later formalized in VAR settings by Nicholls and Pope (1988) and Pope (1990).
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Bias in Levels LP:
+\end_layout
+
+\begin_layout Itemize
+The levels specifaction tends to exhibit samll-sample dwonward bias as the estimated IPR are affected by autocorrelation in the residuals.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Advantage of long differenecs:
+\end_layout
+
+\begin_layout Itemize
+The long difference specification works to effectively eliminate much of this bias across all horizons.
+ By focusing on the change between 
+\begin_inset Formula $y_{t+h}-y_{t-1}$
+\end_inset
+
+,
+ the regression mimize the compounding autocorrelation biases.
+\end_layout
+
+\begin_layout Subsection
+Large-sample asymptotics
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Consistency and Normality for fixed h:
+\end_layout
+
+\begin_layout Itemize
+As the sample size 
+\begin_inset Formula $T\rightarrow∞$
+\end_inset
+
+ with a fixed horizon 
+\begin_inset Formula $h,$
+\end_inset
+
+ both the levels and log-difference LP estimates are consistent and converge to the true impulse response.
+ Their sampling distributions are asymptotically normal.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Challenges when 
+\begin_inset Formula $h$
+\end_inset
+
+ grows with T:
+\end_layout
+
+\begin_layout Itemize
+Phillips (1998) shows that in autoregressive models with non-stationary data,
+ the distribution of impulse response coefficients is no longer normal and the estimates can become inconsistent.
+\end_layout
+
+\begin_layout Section
+Pointsvise inference
+\end_layout
+
+\begin_layout Standard
+Inference on IPR estimated via LP introsuces som unique challences compared to tradtional econometric models.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Robust Pointwise inference:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+They prpose a robust method based on adding extra lags (lag augmentation) in the regression.
+\end_layout
+
+\begin_layout Itemize
+This adjustment hleps ensure that hte inference is uniformly valid wheter the data are stionary or non-stionary for a wide range of response horizons.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+Semi-parametric Efficiency
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+When the true lag sturvture is unknown or potentially infininte,
+ LPs remain semi parametrically efficient provided that the number of controlled lags grows with the sample size.
+\end_layout
+
+\begin_layout Itemize
+As a result any efficent loss compared to more structure methods vanisses asymtotically (xu 2023).
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+Robust Confidence Intervals:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Recent reserch (Plagborg-Møller,
+ Montiel-Olea,
+ Qian,
+ and Wolf,
+ 2024) shows thatLP confiedence intervals maintain the correct probablity coverage even when there is mild model misspecification - constarting with VAR confidence intervals,
+ which tend to under-cover under similar conditions.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+Small-Sample concerns
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Like VARs,
+ LP-based impulser espones can suffer frmo small-sample biases.
+ The next section of the paper will discuss issues related to simultaneous inference (that is,
+ assessing the uncertainty along the entire response path rather than at individual horizons).
+\end_layout
+
+\end_deeper
+\begin_layout Subsection
+The moving agerage Residuals struture of LPs
+\end_layout
+
+\begin_layout Subsubsection
+An AR(1) illustration
+\end_layout
+
+\begin_layout Standard
+To understand the challenges in LP inference,
+ consider a simple AR(1) model:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+w_{t}=\phi w_{t-1}+u_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+By repeated substitution (similar to what is done in a VAR(1)),
+ we can express the outcome at horizon 
+\begin_inset Formula $h$
+\end_inset
+
+ as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+w_{t+h}=\phi^{h+1}w_{t-1}+v_{t+h}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+where the error term is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+v_{t+h}=u_{t+h}+\phi u_{t+h-1}+...+\phi^{h}u_{t},h=1,...,H
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Serial Correlation in Residuals:
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Moving -Average Struvture:
+\end_layout
+
+\begin_layout Itemize
+Notie that 
+\begin_inset Formula $v_{t+h}$
+\end_inset
+
+ is MA(h) process.
+ This means that although the regression is of 
+\begin_inset Formula $w_{t+h}$
+\end_inset
+
+ on 
+\begin_inset Formula $w_{t-1}$
+\end_inset
+
+ the erro term is serially correlated.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Implication for inference:
+\end_layout
+
+\begin_layout Itemize
+Serial correlation complicates inference because standard error estimates can be biased if this dependence is ignored.
+\end_layout
+
+\begin_layout Subsubsection
+The HAC solution:
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+HAC Covariance Estimatior:
+\end_layout
+
+\begin_layout Itemize
+A common solution proposed by Jorda (2005) is to use a heteorskedasticity and autocorrelation consistent (HAC) covariance estimator,
+ such as the Newey-West estimator.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Semi-parametric Correction:
+\end_layout
+
+\begin_layout Itemize
+Thi approach corrects the standard errors without having to fully specify the exact form of the serial correlation in the residuals.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Extension to Panel data:
+\end_layout
+
+\begin_layout Itemize
+In Panel settings,
+ similiar strategies are employed.
+ For Example,
+ the Driscoll-Kraay covariance estimator is widely used to account for cross-section dependence and serial correlation.
+\end_layout
+
+\begin_layout Subsection
+The basic issues
+\end_layout
+
+\begin_layout Itemize
+In this section,
+ the authors use a simple AR(1) model to illustrate some fundamental issues in performing inference with local projections (LPs).
+ 
+\end_layout
+
+\begin_layout Itemize
+The discussion focuses on understanding how the LP estimator behaves,
+ particularly when the autoregressive parameter 
+\begin_inset Formula $\phi$
+\end_inset
+
+ is close to unity,
+ which leads to near-unit root problems.
+\end_layout
+
+\begin_layout Subsubsection
+The Stylized AR(1) model
+\end_layout
+
+\begin_layout Standard
+Consider the following DGP:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+w_{t}=\phi w_{t-1}+u_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Where 
+\begin_inset Formula $u_{t}$
+\end_inset
+
+ is strictly startionart,
+ and we assume 
+\begin_inset Formula $E\left(u_{t}\mid\{u_{s}\}_{s\neq t}\right)$
+\end_inset
+
+ almost surely.
+\end_layout
+
+\begin_layout Itemize
+This setup follows Montiel Olea and Plagborg-Møller (2021) and serves as a simplified framework for discussing LP estimation with lag-augmentation.
+\end_layout
+
+\begin_layout Subsubsection
+LP estimation of the impulse responses
+\end_layout
+
+\begin_layout Standard
+Using the notation forrom the paper,
+ let 
+\begin_inset Formula $\beta\left(\phi,h\right)$
+\end_inset
+
+ denote the LP parameter used to esitmate teh IPR 
+\begin_inset Formula $\phi^{h}$
+\end_inset
+
+.
+ This is,
+ the LP is specifed as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+w_{t+h}=\beta\left(\phi,h\right)w_{t}+\psi\left(\phi,h\right)
+\]
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+With the error term defined as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\psi\left(\phi,h\right)=\sum_{l=1}^{h}\phi^{h-l}u_{t+l}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Interpretaion:
+
+\series default
+ The parameter 
+\begin_inset Formula $\beta\left(\phi,h\right)$
+\end_inset
+
+ is intended to caputra the cumulative effect of a shock on 
+\begin_inset Formula $w_{t}$
+\end_inset
+
+ over 
+\begin_inset Formula $h$
+\end_inset
+
+ periods.
+ 
+\end_layout
+
+\begin_layout Itemize
+In a correctly specified AR(1) process,
+ the true impuls response is 
+\begin_inset Formula $\phi^{h}$
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Issues with the LP esteimator
+\end_layout
+
+\begin_layout Paragraph
+Moving average struvture of residauls
+\end_layout
+
+\begin_layout Itemize
+The eror term 
+\begin_inset Formula $\psi\left(\phi,h\right)$
+\end_inset
+
+ has a moving-average (MA) struvture of order 
+\begin_inset Formula $h$
+\end_inset
+
+,
+ which complicates inference.
+\end_layout
+
+\begin_layout Itemize
+Because of this sereial correlation,
+ standard errors must be adjuststed using hetoerskedasticity and autocorrelation consistent (HAC) estimators,
+ such as the Newer West estimator 
+\end_layout
+
+\begin_layout Paragraph
+Near unit root problem
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Near unity behavior:
+ 
+\series default
+When 
+\begin_inset Formula $\phi\rightarrow1$
+\end_inset
+
+,
+ the distirbution of the LP estimator 
+\begin_inset Formula $\hat{\beta}\left(\phi,h\right)$
+\end_inset
+
+ approaches that of a near-unit root process.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Downward bias:
+
+\series default
+ This near-unit root condition leads to a well-known downward ibas in the impulse reponse estimator.
+ The bias which is of order 
+\begin_inset Formula $O\left(T^{-1}\right)$
+\end_inset
+
+ becomes more pronounced as the sample size 
+\begin_inset Formula $T$
+\end_inset
+
+ decreases.
+ 
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Inference challenges:
+
+\series default
+ Near-to-unity asymptotic results indicates that stndard critical values from the normal distribution do not provide uniformly valid inference 
+\begin_inset Formula $\forall\phi\in\left(-1,1\right)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Paragraph
+Stationary Region Inference:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Inside the starionary region:
+ 
+\end_layout
+
+\begin_layout Section
+Joint inference
+\end_layout
+
+\begin_layout Section
+Instrumental variables:
+ LP-IV
+\end_layout
+
+\begin_layout Section
+Panel data
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,2454 @@
+#LyX 2.4 created this file. For more info see https://www.lyx.org/
+\lyxformat 620
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{geometry}
+\geometry{verbose, tmargin=3.7cm, bmargin=2.5cm, innermargin=4.25cm, outermargin=2.75cm, headheight=2cm, headsep=1.7cm, footskip=1.5cm}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\usepackage{colortbl}
+\usepackage[utf8]{inputenc}
+
+\definecolor{DREAM}{HTML}{DE0D0D} 
+\definecolor{MAKRO}{HTML}{0F837D} 
+\definecolor{SMILE}{HTML}{F76E00} 
+\definecolor{GREFORM}{HTML}{31B149} 
+\definecolor{REFORM}{HTML}{1F8FBB} 
+
+\definecolor{GRAY}{HTML}{E6E6E8} 
+
+\renewcommand{\headrulewidth}{0pt} % Remove fancy header line
+
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+
+\renewcommand{\maketitle}{
+	\bgroup\setlength{\parindent}{0pt}
+	\begin{flushleft}
+		\textbf{\huge\@title}
+
+		\vspace{20pt}
+
+		\textbf{\normalsize\@author}
+
+		\textbf{Working paper}\newline\@date
+
+		www.dreamgruppen.dk
+	\end{flushleft}\egroup
+}
+
+\fancyhead[L]{
+	\small
+	\textcolor{MAKRO}{
+		\textbf{\@title}
+		\linebreak
+		\leftmark
+	}
+}
+\fancyhead[C]{}
+\fancyhead[R]{}
+
+\fancyfoot[L]{\small DREAM | \textcolor{MAKRO}{MAKRO}}
+\fancyfoot[C]{}
+\fancyfoot[R]{\small \thepage}
+
+\usepackage{amsmath}
+\bibliographystyle{plainnat}
+
+\setlength\parindent{0pt}
+\setlength\parskip{6pt}
+
+\makeatletter\let\ps@plain\ps@fancy\makeatother  % Also use header on first page
+
+\usepackage{amsmath}
+\numberwithin{figure}{subsection}
+\numberwithin{table}{subsection}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children no
+\language english
+\language_package default
+\inputencoding auto-legacy
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement class
+\float_alignment class
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize a4
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\end_header
+
+\begin_body
+
+\begin_layout Section
+Jordà - 2005 - Estimation and Inference of Impulse Responses by Local Projections
+\end_layout
+
+\begin_layout Subsection*
+Introduction
+\end_layout
+
+\begin_layout Standard
+Oscar Jorda (2005) introduces a new method for estimating impulse responses using local projections instead of the traditional Vector Autoregression (VAR) approach.
+ The key motivation is that VAR models impose strong assumptions on the underlying data-generating process (DGP),
+ which may not hold in pracrice.
+ 
+\series bold
+SUCH as what?
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+The key points in the paper is:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+VARs assume that the observed variables follow a specific multivariate time series process
+\end_layout
+
+\begin_layout Itemize
+Even if the macroeconomy can be described by a VAR,
+ the subset of variables available to researches may follow a 
+\series bold
+VARMA
+\series default
+ model instead.
+\end_layout
+
+\begin_layout Itemize
+VARs often require long lag lengths to approximate the true DGP correctly.
+\end_layout
+
+\begin_layout Itemize
+They can be significantly misspecified leading to biased or inconsistent IPR estimates.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+Alternative approach –> Local Porjections
+\series default
+:
+ Instead of estimating hte full dynamic system (like VAR),
+ local projections estimate 
+\series bold
+separate regressions
+\series default
+ for each forecast horizon.
+ And the advantages are:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Simpler estimation:
+ Uses OLS and standrad regression software.
+\end_layout
+
+\begin_layout Itemize
+More robust to misspecification.
+ 
+\series bold
+WHY IS THAT?
+\end_layout
+
+\begin_layout Itemize
+Allows for flexible and nonlinear specifiations,
+ which VAR have trouble handling.
+ 
+\series bold
+WHY IS THAT,
+ and why does LP allow for it?
+\end_layout
+
+\begin_layout Itemize
+Inference is simpler.
+ Does not require asymtotic approximations like the deltage method.
+\end_layout
+
+\end_deeper
+\begin_layout Paragraph
+1) What strong assumptions do VAR models impose on the DGP,
+ which may not hold in practice?
+\end_layout
+
+\begin_layout Standard
+VAR models assume that the observed time series data fllow a specific multivariate linear proces:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Y_{t}=A_{1}Y_{t-1}+...+A_{p}Y_{t-p}+\varepsilon_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $Y_{t}$
+\end_inset
+
+ is a vector of endogenonus variables,
+ 
+\begin_inset Formula $A_{i}$
+\end_inset
+
+ is the coefficent matrice and 
+\begin_inset Formula $\varepsilon_{i}$
+\end_inset
+
+ is an error term assumed to be white noise.
+ In realy these asumption often do not hold due to varies reasons such as.
+\end_layout
+
+\begin_layout Description
+1) True DGP may follow a VARMA not a VAR.
+\end_layout
+
+\begin_layout Itemize
+It has been shown that even if the macroeconomy is well cescribed by a VARMA model,
+ researches typically approx it with a VAR.
+ However a VAR cannot properly caputra the MA terms,
+ leading to potential misspecification.
+\end_layout
+
+\begin_layout Description
+2) The VAR may require too many lags.
+\end_layout
+
+\begin_layout Itemize
+In practice adding to many lags reduce DOF,
+ and increases estimation uncertainty.
+\end_layout
+
+\begin_layout Description
+3) Nonlinearities in the ecoconmy.
+\end_layout
+
+\begin_layout Itemize
+Many economic relationships are not striclt linear,
+ but a standard VAR is limited to caputring 
+\series bold
+only linear dependencies.
+\end_layout
+
+\begin_layout Itemize
+For example,
+ monetary policy effects may differ in recessions vs booms,
+ but a linear VAR does not allows for this.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+NK-DSGE model
+\series default
+ often generente nonlinear dynamics (Rotemberg pricing introduces quadratic cost function),
+ which cannot be caputered by a standard VAR.
+\end_layout
+
+\begin_layout Description
+4) Incorrect identificatuion of shocks.
+\end_layout
+
+\begin_layout Itemize
+In standard VARs,
+ structual shock are often indeified using 
+\series bold
+Cholesky decompision,
+
+\series default
+ which imposes a arbitrary ordering of variables.
+\end_layout
+
+\begin_layout Itemize
+This means that IR depnd on assumptions about the contemporaneous interactions,
+ which may not reflect the true economic structure.
+\end_layout
+
+\begin_layout Paragraph
+2) Why are LP more robust to misspecifition than VAR?
+\end_layout
+
+\begin_layout Description
+Key-reason LP does not assume a fixed multivariate structure but esitmates each IP step seperatly.
+\end_layout
+
+\begin_layout Description
+1) No reason to assume the entire DGP is correct.
+\end_layout
+
+\begin_layout Itemize
+VAR IR repend on the entire model being correctly specified.
+\end_layout
+
+\begin_layout Itemize
+If the lag length is too short,
+ a VAR misses important dynamics,
+ if it is too long the VAR wastes degree of freedom.
+\end_layout
+
+\begin_layout Itemize
+LP fixed this problem by estimating each horizon separately.
+\end_layout
+
+\begin_layout Itemize
+This means error from one period do not carry over to another,
+ avoiding compounding misspecification errors.
+ 
+\end_layout
+
+\begin_layout Description
+2) LP handle missing variables better.
+\end_layout
+
+\begin_layout Itemize
+If some relevant variables are omitted,
+ a VAR will spread the error across all IR.
+\end_layout
+
+\begin_layout Itemize
+LP estiamtes each horizon independently,
+ meaning the misspecification only affect on regression at a time,
+ reducing the overall bias.
+ 
+\end_layout
+
+\begin_layout Paragraph
+3) Why do VARs sruggle with nonlinearities,
+ and why do LP´s allow for them?
+\end_layout
+
+\begin_layout Description
+1) VAR models assume linear relationship.
+\end_layout
+
+\begin_layout Itemize
+A standard VAR assumes the relationsihp between bariables is constant over time,
+ and can be represented as a lienar system.
+\end_layout
+
+\begin_layout Itemize
+Howver in reality:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Economic effects can be asymmetric (raising interest rates might reduce inflation more than cutting rates increases it).
+\end_layout
+
+\begin_layout Itemize
+The effects of a shock might depend on the state of the economy.
+\end_layout
+
+\begin_layout Itemize
+Variables might interact in nonlinear ways.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Description
+2) LP allows for nonlienar specification.
+\end_layout
+
+\begin_layout Itemize
+Since LP uses separate regressions for each forecast horizon,
+ we can add nonlinear transformation (quadratic,
+ cubic or interactions terms etc).
+\end_layout
+
+\begin_layout Itemize
+This allows LP to captura state-dependent effects,
+ for instance difference responses in booms vs recessions.
+\end_layout
+
+\begin_layout Itemize
+LP can inorporta threshold effects,
+ where the response changes depending on the level of another varaible.
+\end_layout
+
+\begin_layout Subsection*
+Impulse responses
+\end_layout
+
+\begin_layout Standard
+In a fundamental tool in macroeconometrics,
+ and can help us understand how an economic variable reacts over time to a shock in another variable.
+\end_layout
+
+\begin_layout Paragraph
+1) What is an impulse reponse?
+\end_layout
+
+\begin_layout Itemize
+An IRF shows the effect of a one-time shock (impulse) to one variable on another variable in a system over time.
+\end_layout
+
+\begin_layout Itemize
+In mathematical terms,
+ an IPR is the expected difference between two forecasts:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+IR_{t}\left(t,s,d_{t}\right)=E\left[y_{t+s}\mid v=d_{i};X_{t}\right]-E\left[y_{t+s}\mid v=0;X_{t}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Where 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $y_{t+s}$
+\end_inset
+
+ is the endeongeous variable of interest at time 
+\begin_inset Formula $t+s$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $v_{t}$
+\end_inset
+
+ is the structural shock occuring at 
+\begin_inset Formula $t$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $d_{t}$
+\end_inset
+
+ is the size and type of shock (e.g.
+ a 1% monteray policy shock).
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $X_{t}$
+\end_inset
+
+ is the information set available at time t.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Paragraph
+2) What does this equation mean?
+\end_layout
+
+\begin_layout Standard
+The IPR measures the difference between:
+\end_layout
+
+\begin_layout Enumerate
+The expected path of 
+\begin_inset Formula $y_{t+s}$
+\end_inset
+
+ if the economy recieve a shock a t
+\end_layout
+
+\begin_layout Enumerate
+The expected payh of 
+\begin_inset Formula $y_{t+s}$
+\end_inset
+
+ if no shock occurs.
+\end_layout
+
+\begin_layout Subsection
+Estimation and inference
+\end_layout
+
+\begin_layout Subsubsection
+Estimation
+\end_layout
+
+\begin_layout Standard
+Jorda critiques the tradional approach to esitmaitng IPR using a Wold decomposition of a VAR model.
+ He argues that this is only valid if the VAR model correctly represent the true GDP,
+ which is often not the case.
+ Insted he proposes that IPR can be defined independently of the DGP,
+ making them more robust.
+\end_layout
+
+\begin_layout Paragraph
+1) Traditional Approach:
+ Wold decomposition & VAR models.
+\end_layout
+
+\begin_layout Standard
+In time series econometrics,
+ the 
+\series bold
+Wold 
+\series default
+decomposition theorem states that any covariance stationary time series,
+ can be written as a moving average (MA) process of past shocks.
+\end_layout
+
+\begin_layout Itemize
+This means that any VAR(p) model can be rewritten as an infinite Vector Moving Average (VMA) representation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y_{t}=\sum_{j=0}^{∞}\Phi_{j}v_{i-j}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $y_{t}$
+\end_inset
+
+ is an 
+\begin_inset Formula $n\times1$
+\end_inset
+
+ vector of ednougenous variables.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $v_{t}$
+\end_inset
+
+ is the 
+\begin_inset Formula $n\times1$
+\end_inset
+
+ vector of reduced from disturbances.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\Phi_{j}$
+\end_inset
+
+ are impulse response coefficent.
+\end_layout
+
+\begin_layout Itemize
+IPR in a VAR is then obtained by shocking 
+\begin_inset Formula $v_{t}$
+\end_inset
+
+ and using this VMA representation to compute the dynamic effects over time.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Why is this a problem?
+\end_layout
+
+\begin_layout Itemize
+The VAR models must be correctly specified.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+If the estimated VAR model does not match the true GDP,
+ the computed IPR will be baised.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Misspecification compouns errors over time.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Since IPR in a VAR are computed recursively,
+ small specification errors get larger at longer horizons.
+\end_layout
+
+\end_deeper
+\begin_layout Paragraph
+2) Alternative approach:
+ Defining IPR without a DGP.
+ 
+\end_layout
+
+\begin_layout Standard
+Jorda argues that IPR can be defined without assuming the correct DGP.
+ He adopts a forecast-based approach,
+ and defines IPR as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+IR_{t}\left(t,s,d_{t}\right)=E\left[y_{t+s}\mid v=d_{i};X_{t}\right]-E\left[y_{t+s}\mid v=0;X_{t}\right],s=0,1,2,...,
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $E[.]$
+\end_inset
+
+ denotes the best mean squared error predictors.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $y_{t}$
+\end_inset
+
+ is an 
+\begin_inset Formula $n\times1$
+\end_inset
+
+ random vector.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $X\equiv\left(y_{t-1},y_{t-2},...\right)^{\prime}$
+\end_inset
+
+ is past observartion of 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+,
+ and represents the information available at time 
+\begin_inset Formula $t$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $0$
+\end_inset
+
+ is of dimension 
+\begin_inset Formula $n\times1$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $v_{t}$
+\end_inset
+
+ is the 
+\begin_inset Formula $n\times1$
+\end_inset
+
+ vevtor of reduced form disturbances.
+ The unexpected shocks driving fluctuations in the system.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $D$
+\end_inset
+
+ is an 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ matrix,
+ whose columsn 
+\begin_inset Formula $d_{i}$
+\end_inset
+
+ contain the relevant experimental shock.
+ Helpts extract structua shocks from raw regressions residuals.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Sidenote:
+
+\series default
+ Unstanding 
+\begin_inset Formula $D$
+\end_inset
+
+ in a VAR framefork.
+ 
+\end_layout
+
+\begin_layout Itemize
+Ub a VAR nidek we estunate the reduced from equation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Y_{t}=A_{1}Y_{t-1}+...+A_{p}Y_{t-p}+v_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $Y_{t}$
+\end_inset
+
+ is a 
+\begin_inset Formula $n\times1$
+\end_inset
+
+ vector of endogenous variable (e.g.
+ GDP,
+ Inflation,
+ interest rates).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula $v_{t}$
+\end_inset
+
+ is an 
+\begin_inset Formula $n\times1$
+\end_inset
+
+ vector of reduce dfrom distrubances (estimated residuals).
+\end_layout
+
+\begin_layout Standard
+The var-cvar matrix of 
+\begin_inset Formula $v_{t}$
+\end_inset
+
+ is
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\varSigma=E\left(v_{t}v_{t}^{\prime}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To recover the structural breaks,
+ from the reduced form residausl,
+ we define:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+v=D\epsilon_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\epsilon_{t}$
+\end_inset
+
+ is the 
+\begin_inset Formula $n\times1$
+\end_inset
+
+ vector of structural shocks (e.g.
+ monetary policy shock).
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $D$
+\end_inset
+
+ is thet 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ trnasfomration matrix that maps reduced form erros to structural shocks.
+\end_layout
+
+\begin_layout Standard
+Insering 
+\begin_inset Formula $v_{t}=D\epsilon_{t}$
+\end_inset
+
+ :
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\begin{alignedat}{1}\varSigma= & E\left(D\epsilon_{t}\left(D\epsilon_{t}\right)^{\prime}\right)\\
+= & DE\left(\epsilon_{t}\epsilon_{t}^{\prime}\right)D^{\prime}
+\end{alignedat}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+By assumption the structures shocks 
+\begin_inset Formula $\epsilon_{t}$
+\end_inset
+
+ are 
+\series bold
+uncorrelated and have identivy variance,
+ i.e.:
+ 
+\begin_inset Formula $E\left(\epsilon_{t}\epsilon_{t}^{\prime}\right)=I_{n}$
+\end_inset
+
+,
+ thus:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\begin{alignedat}{1}\varSigma= & DI_{n}D^{\prime}\\
+= & DD^{\prime}
+\end{alignedat}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+To recover the structural shocks frm the reduced form residuals,
+ we need to invert this relationship.
+ Since 
+\begin_inset Formula $\varSigma$
+\end_inset
+
+ is symmetric and positive definite,
+ is has a Cholesky decomposition:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\varSigma=PP^{\prime}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $P$
+\end_inset
+
+ i s a lower trianglur matrix.
+ If we the n compare with the Cholesky decomposition we set:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+DD^{\prime}=PP^{\prime}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To recover the structural shocks,
+ we need to express them in terms of the reduced from errors:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\epsilon_{t}=D^{-1}v_{t}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Since 
+\begin_inset Formula $DD^{\prime}=PP^{\prime}$
+\end_inset
+
+ we can choose 
+\begin_inset Formula $D$
+\end_inset
+
+ such that:
+ 
+\begin_inset Formula $D=P^{-1}$
+\end_inset
+
+,
+ this allows us to write the relationship,
+ 
+\begin_inset Formula $\epsilon_{t}=P^{-1}v_{t}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Intutition behind this approach:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $v_{t}$
+\end_inset
+
+ is the residuals from the reduced form VAR,
+ i.e.
+ the error that remain after estimating the var model.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+These residuals contain a mix of idfferent economic shocks,
+ but we do not know their true sources.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+But to distinguish between strutucal shocks 
+\begin_inset Formula $\epsilon_{t}$
+\end_inset
+
+,
+ and just random noice,
+ we use a 
+\series bold
+Cholesky decompoistion.
+
+\series default
+ 
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Because the reduced from residuals 
+\begin_inset Formula $v_{t}$
+\end_inset
+
+ are correlated,
+ meaning they are influence by multiple shocks at the same time.
+\end_layout
+
+\begin_layout Itemize
+The Cholesky decompsition imposes a causal ordering that allows us to separate the structural shocks frmo the mixed residuals.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Where we use the relationship:
+ 
+\begin_inset Formula $\epsilon_{t}=D^{-1}v_{t}$
+\end_inset
+
+.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $D$
+\end_inset
+
+ determines the contemporianeous relationships between variables.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Paragraph
+Example
+\end_layout
+
+\begin_layout Standard
+Lets conside a VAR with two macroeconomic variables:
+\end_layout
+
+\begin_layout Enumerate
+GDP growth,
+ 
+\begin_inset Formula $y_{t}^{GDP}$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Enumerate
+Interest rate 
+\begin_inset Formula $y_{t}Î$
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+The reduced from residuals,
+ observered errors in the esitmated VAR are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+v_{t}=\left[\begin{array}{c}
+v_{t}^{GDP}\\
+v_{t}^{i}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The resuduals are a mixture of structural shock,
+ which we assume to be the true econimic disturbances:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\epsilon_{t}=\left[\begin{array}{c}
+\epsilon_{t}^{GDP}\\
+\epsilon_{t}^{i}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Using the fundamental relationship:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+v_{t}=D\epsilon_{t}\Leftrightarrow
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\left[\begin{array}{c}
+v_{t}^{GDP}\\
+v_{t}^{i}
+\end{array}\right]=\left[\begin{array}{cc}
+d_{11} & d_{12}\\
+d_{21} & d_{22}
+\end{array}\right]\left[\begin{array}{c}
+\epsilon_{t}^{GDP}\\
+\epsilon_{t}^{i}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $d_{11}$
+\end_inset
+
+ is the dirrect effecot of a GDP shock on GDP
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $d_{12}$
+\end_inset
+
+ is the effect of a monteary policy shock to GDP
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $d_{21}$
+\end_inset
+
+ is the effect of a GDP shock on montary policy
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $d_{22}$
+\end_inset
+
+ is the effect of a policy shock on interest rate.
+ 
+\end_layout
+
+\begin_layout Standard
+If we use Cholesky decomposition and assume GDP is more exogenous than intereset rates,
+ we impose a triangular structure:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+D=\left[\begin{array}{cc}
+d_{11} & 0\\
+d_{21} & d_{22}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+i.e.
+ GDP only repsondes to its own shock,
+ meaning nonetary policy does not have instnatenous effet on GDP.
+ 
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Structural identification remains an open probælem
+\end_layout
+
+\begin_layout Itemize
+In VAR models the contemporenous relationship between variables are not dirrectly opbservered.
+ And as seen above,
+ standard approaches,
+ e.g.
+ Cholesky decomposition impose assumptions to recover structual shocks.
+\end_layout
+
+\begin_layout Itemize
+Jorda does not focus on identification in his paper but instead introduces a flexible framefork where the experiment 
+\begin_inset Formula $D$
+\end_inset
+
+ (shock structure) is chosen without loss of genereality 
+\series bold
+WHAT DOES THIS MEAN?
+\end_layout
+
+\begin_layout Paragraph
+The goal of impulse responce estimation is to obtatin multi-stpe forecasts
+\end_layout
+
+\begin_layout Standard
+Expression (1) shows that an impulse responce function (IRF) is calculated by compoaring two expected future paths.
+ 
+\end_layout
+
+\begin_layout Itemize
+Traditional VARs compute IRFs by recursively iterating on the estimated model.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+This works well if the model is correctly specified.
+\end_layout
+
+\begin_layout Itemize
+However if the model is misspecified,
+ impulse resopnses will be biased.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+Instead of estimaitng a full model and recursively forecasting each step,
+ we estimate separate regression for each horizon.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+This is the core idea behind Local Projections.
+ 
+\end_layout
+
+\begin_layout Subsection
+Local projections
+\end_layout
+
+\begin_layout Standard
+If we consider estimating 
+\begin_inset Formula $y_{t+s}$
+\end_inset
+
+ using past data 
+\begin_inset Formula $\left(y_{t-1},...,y_{t-p}\right)^{\prime}$
+\end_inset
+
+ ,
+ specifically:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{t+s}=\alpha^{s}+B_{1}^{s+1}y_{t-1}+B_{2}^{s+1}y_{t-2}+...+B_{p}^{s+1}y_{t-p}+u_{t+s}^{s},s=0,1,2,...,h
+\end{equation}
+
+\end_inset
+
+Where we have that:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $y_{t+s}$
+\end_inset
+
+:
+ The future value in period 
+\begin_inset Formula $s$
+\end_inset
+
+ of the variable we want to estimate.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\alpha^{s}$
+\end_inset
+
+:
+ is an 
+\begin_inset Formula $n\times1$
+\end_inset
+
+ vector of constant:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $B_{i}^{s+1}$
+\end_inset
+
+ are matrices of coffeicients for each lag 
+\begin_inset Formula $i$
+\end_inset
+
+ and horizon 
+\begin_inset Formula $s+1$
+\end_inset
+
+.
+ I.e.
+ describe the effect of past value on 
+\begin_inset Formula $y_{t+s}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $u_{t+s}^{s}$
+\end_inset
+
+:
+ The residuals (forecast errors),
+ that captures everything not explained by past values.
+\end_layout
+
+\begin_layout Itemize
+We denote the collection of (h) regressions in (2) as local projections.
+ A term aptly evocative of nonparameteric considertions.
+\end_layout
+
+\begin_layout Standard
+Jorda then define sthe IRF as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\hat{IR}\left(t,s,d_{i}\right)=\hat{B}_{1}^{s}d_{i},s=0,1,2,...,h
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+I.e.
+ the impulse response at horizon 
+\begin_inset Formula $s$
+\end_inset
+
+ is simply the estimated coefficient 
+\begin_inset Formula $\hat{B}_{1}^{s}$
+\end_inset
+
+ times the shock 
+\begin_inset Formula $d_{i}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+The normalization;
+ 
+\begin_inset Formula $B_{1}^{0}=1$
+\end_inset
+
+,
+ ust enstures that the shock starts at 0.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Consistency of the estimates.
+\end_layout
+
+\begin_layout Standard
+Referencing (Weiss,
+ 1991),
+ saying that the multi-step forecast approach is:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Consistent:
+
+\series default
+ As long as enough data is available.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+Is asymtotically normal:
+ 
+\series default
+Meaning that estimates follow a nomrla distribution asymtotically.
+\end_layout
+
+\begin_layout Subsubsection
+Why are the residuals uncorrelated with the regressors?
+\end_layout
+
+\begin_layout Itemize
+Since the regressors are from 
+\begin_inset Formula $t-1$
+\end_inset
+
+ to 
+\begin_inset Formula $t-p$
+\end_inset
+
+,
+ theyt are lagged vlaues.
+ The forecast errors 
+\begin_inset Formula $u_{t+1}^{s}$
+\end_inset
+
+ only depend on the information from time 
+\begin_inset Formula $t$
+\end_inset
+
+ onward.
+ 
+\end_layout
+
+\begin_layout Itemize
+This means the that OLS estimates of 
+\begin_inset Formula $B_{1}$
+\end_inset
+
+ are unbaised.
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+
+\series bold
+VAR:
+
+\series default
+ Residuals may be correlated across equations,
+ leading to potential bias if model is misspecified.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+LP:
+
+\series default
+ Since each equation is estimated separately,
+ this issue does not arise.
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection
+Practical Comments
+\end_layout
+
+\begin_layout Description
+1) The maximum lag p,
+ need not to be common to each horizon s.
+\end_layout
+
+\begin_layout Itemize
+In traditional VAR models,
+ we typically select one lag length for the entire system,
+ using information criteria.
+\end_layout
+
+\begin_layout Itemize
+In LP,
+ the est choice of p may vary across forecast horisons s.
+\end_layout
+
+\begin_layout Itemize
+For short horizons we may need fewer lags becuase recent history is more relevant.
+\end_layout
+
+\begin_layout Itemize
+For longer horizons we might need more lags to captura long-term effects.
+\end_layout
+
+\begin_layout Description
+2) The lag length and the dimensions of the vector 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+ ,
+ will impose DoF constraints on the maximm practical horizon h,
+ for very small samples.
+\end_layout
+
+\begin_layout Itemize
+When estimating LPs,
+ we need enough data to esitmate each horizon-specific regresions.
+\end_layout
+
+\begin_layout Itemize
+If we inclde to many lags,
+ we lose DoF because each lag requires more parameters
+\end_layout
+
+\begin_layout Description
+3) We can estimate impulse responses using separate univarite regressions.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+VAR:
+
+\series default
+ all equations are estimated jointly.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+LP:
+
+\series default
+ We do not need to estimate all regressions togheter,
+ and can just estimate one at a time using simple univariate regressiosn.
+\end_layout
+
+\begin_layout Subsubsection
+LP are useful in computing hte forecast-error variance decomposition
+\end_layout
+
+\begin_layout Description
+
+\series bold
+Sidenote 
+\series default
+Forecast-Error Variance Decompisition (FEVD):
+\end_layout
+
+\begin_layout Itemize
+Measures how much the forecast error in a variable is explained by each struturcal shock over idfferent forecast horizons.
+ 
+\end_layout
+
+\begin_layout Itemize
+It thus tells us which shocks drive fluctuations in a variable over time.
+ For example:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+How much of GDP´s variation is explained y monetary policy shocks?
+\end_layout
+
+\end_deeper
+\begin_layout Description
+Forecast-error definition in LP:
+\end_layout
+
+\begin_layout Standard
+The forecat error can be derived directly from eq.
+ 2,
+ as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+y_{t+s}-E\left(y_{t+s}\mid X_{t}\right)=u_{t+s}^{s},s=0,1,2,...
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Thus the MSE of the forecast is given by:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+\begin{alignedat}{1}MSE_{u}= & E\left[\left(y_{t+s}-E\left[y_{t+s}\mid X_{t}\right]\right)\left(y_{t+s}-E\left[y_{t+s}\mid X_{t}\right]\right)^{\prime}\right]\\
+= & E\left[u_{t+s}^{s}\left(u_{t+s}^{s}\right)^{\prime}\right]
+\end{alignedat}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The forecsat error is just the variance of the residuals.
+\end_layout
+
+\begin_layout Description
+Forecast-error-Variance decomposed into structural shocks
+\end_layout
+
+\begin_layout Standard
+Now Jorda decompose the forecast error variance into contributions from differenct structural shocks.
+\end_layout
+
+\begin_layout Description
+Step.1) Transform the forecast error variance using D:
+\end_layout
+
+\begin_layout Itemize
+Jorda applies the transformation matrix D,
+ (which realtes to the reduced form residuals to structural shocks 
+\begin_inset Formula $\epsilon_{t}$
+\end_inset
+
+):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+MSE=D^{-1}E\left[u_{t+s}^{s}\left(u_{t+s}^{s}\right)^{\prime}\right]\left(D^{-1}\right)^{\prime}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+MSE is now normalized into a form where it can be directly decomposed into strucural shocks.
+ 
+\series bold
+HOW DOES THIS relatate to Cholesky Decomposition?
+\end_layout
+
+\begin_layout Standard
+How does this differ from tradiational VAR FEVD?
+\end_layout
+
+\begin_layout Itemize
+In traditional VAR models,
+ the variance decomposition is derived from the moving average (MA) representation:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+MSE_{u}=E\left(u_{t+s}\left(u_{t+s}\right)^{\prime}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Which is computed recursively using VAR Impulse response coefficents:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+MSE_{U}=\sum_{i=0}^{s}\Phi_{i}E\left[u_{t}u_{t}^{\prime}\right]\Phi_{i}^{\prime}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\Phi_{i}$
+\end_inset
+
+ are the MA coefficients,
+ derived from inverting the VAR
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $E\left(u_{t}u_{t}^{\prime}\right)$
+\end_inset
+
+ is the residual variance-covariance matrix of the VAR.
+\end_layout
+
+\begin_layout Standard
+Why does this matter?
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+VAR:
+
+\series default
+ The accuracy of the variance decomposition depends on how well 
+\begin_inset Formula $\Phi_{i}$
+\end_inset
+
+ approximate the true GDP.
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+LP:
+
+\series default
+ we estimate the variance decomposition directly from the regression residuals,
+ without needing to assume a dynamic structure.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Relation to VAR and inference
+\end_layout
+
+\begin_layout Standard
+Both LP and traditional VARs aim to estimate IPR,
+ but do so in differnet ways
+\end_layout
+
+\begin_layout Paragraph
+Traditional VAR approach
+\end_layout
+
+\begin_layout Standard
+A VAR(p) model for a vector of variables 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+ looks like:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{t}=\mu+\Pi^{\prime}X_{t}+v_{t}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+\begin_inset Formula $v_{t}$
+\end_inset
+
+ 
+\series default
+is an i.i.d vector of disturbances.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\mu$
+\end_inset
+
+ is an 
+\begin_inset Formula $n\times1$
+\end_inset
+
+ matrix of consts.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $X_{t}=\left(y_{t-1},...,y_{t-p}\right)^{\prime}$
+\end_inset
+
+ is an 
+\begin_inset Formula $np\times1$
+\end_inset
+
+ stacked vector of past values.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\Pi=\left[\Pi_{1},...,\Pi_{p}\right]$
+\end_inset
+
+ is an 
+\begin_inset Formula $n\times np$
+\end_inset
+
+ coefficent matrix.
+ 
+\end_layout
+
+\begin_layout Standard
+We can thet nrewrite this VAR(p) into the companion form.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+W_{t}=\left[\begin{array}{c}
+y_{t}-\mu\\
+y_{t-1}-\mu\\
+...\\
+y_{t-p+1}-\mu
+\end{array}\right],F\equiv\left[\begin{array}{ccccc}
+\Pi_{1} & \Pi_{2} & ... & \Pi_{p-1} & \Pi_{p}\\
+I & 0 & ... & 0 & 0\\
+0 & I & ... & 0 & 0\\
+\dots & \dots & \dots & \dots & 0\\
+0 & 0 & ... & I & 0
+\end{array}\right];v_{t}\equiv\left[\begin{array}{c}
+v_{t}\\
+0\\
+...\\
+0
+\end{array}\right]
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Where:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $W_{t}$
+\end_inset
+
+ is the state vector,
+ that allows us to write the VAR(p) system af as single first-order equation.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $F$
+\end_inset
+
+ is the companion matrix,
+ where the first row contains the VAR coefficeints,
+ and the identify matrices (I).
+ Its thus determines how shocks propagate over time.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $v_{t}$
+\end_inset
+
+ is the shocks,
+ and rhte first block contains the original shocks 
+\begin_inset Formula $v_{t}$
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Accoridng to (5) and (6),
+ we can write:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+W_{t}=FW_{t-1}+v_{t}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Where we compute s-step ahead forecast,
+ since,
+ we can just iterate forward,
+ i.e.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\begin{alignedat}{1}W_{t}= & FW_{t-1}+v_{t}\\
+W_{t}= & F\left(FW_{t-2}+v_{t-1}\right)+v_{t}=Fv_{t-1}+F^{2}W_{t-2}+v_{t}\\
+W_{t}= & Fv_{t-1}+F^{2}\left(FW_{t-3}+v_{t-2}\right)+v_{t}\\
+W_{t}= & v_{t}+Fv_{t-1}+Fv_{t-2}+F^{3}W_{t-3}\\
+= & ...\\
+W_{t+s}= & v_{t+s}+Fv_{t+s-1}+...+F^{s}v_{t}+F^{s+1}W_{t-1}
+\end{alignedat}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Since the first row of 
+\begin_inset Formula $W_{t}$
+\end_inset
+
+ matrix,
+ contains 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+,
+ then if we want to extract 
+\begin_inset Formula $y_{t+s}$
+\end_inset
+
+ from 
+\begin_inset Formula $W_{t+s}$
+\end_inset
+
+ we get:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{t+s}-\mu=v_{t+s}+F_{1}^{1}v_{t+s-1}+...+F_{1}^{s}v_{t}+F_{1}^{s+1}\left(y_{t-1}-\mu\right)+F_{p}^{s+1}\left(y_{t-p}-\mu\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where 
+\begin_inset Formula $F_{i}^{s}$
+\end_inset
+
+ is the 
+\begin_inset Formula $i^{th}$
+\end_inset
+
+,
+ upper 
+\begin_inset Formula $n\times n$
+\end_inset
+
+ block of thet matric 
+\begin_inset Formula $F^{s}$
+\end_inset
+
+ (i.e.
+ 
+\begin_inset Formula $F$
+\end_inset
+
+ raised to the power s).
+ 
+\end_layout
+
+\begin_layout Itemize
+Thus we have that:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+\begin_inset Formula $v_{t+s}$
+\end_inset
+
+ represents the mediate shock at time 
+\begin_inset Formula $t+s$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+Past shocks,
+ 
+\begin_inset Formula $v_{t+s-1},...,v_{t}$
+\end_inset
+
+ also contribute to 
+\begin_inset Formula $y_{t+s}$
+\end_inset
+
+ and their effect is controlled by 
+\begin_inset Formula $F_{1}^{s}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The coefficient 
+\begin_inset Formula $F_{1}^{s}$
+\end_inset
+
+ is the first row block of 
+\begin_inset Formula $F^{s}$
+\end_inset
+
+ ,
+ and determines how each past shock propagates over time .
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+If we assume 
+\begin_inset Formula $W_{t}$
+\end_inset
+
+ is covariance-stationary (i.e.
+ the eigenvalues of F lie inside the unit circle),
+ the initie Vector moving average representation of the original VAR in expression (5) is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{t}=\gamma+v_{t}+F_{1}^{1}v_{t-1}+F_{1}^{2}v_{t-2}+...+F_{1}^{s}v_{t-s}+...
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+and impulse response funtction is given by
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+IR\left(t,s,d_{i}\right)=F_{1}^{s}d_{i}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Connecting VAR-based impulse responses and LP impulse responses
+\end_layout
+
+\begin_layout Standard
+Jorda establishes this relationship.
+ First,
+ Local projection IPR (from earlier) is:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{t+s}=\alpha^{1}+B_{1}^{s+1}y_{t-1}+B_{2}^{s+1}y_{t-2}+...+B_{p}^{s+1}y_{t-p}+u_{t+s}^{s}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+If we now compare VAR IPR,
+ rewritten:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{equation}
+y_{t+s}=\left(I-F_{1}^{s}-...-F_{p}^{s}\right)\mu+F_{1}^{s+1}y_{t-1}+...+F_{p}^{s+1}y_{t-p}+\left(v_{t+s}+F_{1}^{1}v_{s-1}+...+F_{1}^{s}v_{t}\right)
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Separator plain
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Here we can quite netly observe that
+\begin_inset Formula 
+\begin{equation}
+\begin{array}{c}
+\alpha^{s}=\left(I-F_{1}^{s}-...-F_{p}^{s}\right)\mu\\
+B_{1}^{s+1}=F_{1}^{s+1}\\
+u_{t+s}^{s}=\left(v_{t+s}+F_{1}^{1}v_{t+s-1}+...+F_{1}^{s}v_{t}\right)
+\end{array}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Hence,
+ when the DGP is the VAR in (5),
+ expression (10) and (11),
+ estblish the equaivlence between impulse responses calculated by local projections and with this VAR.
+\end_layout
+
+\begin_layout Itemize
+If the true DGP is a var,
+ then LP recover the same IPR.
+\end_layout
+
+\begin_layout Itemize
+Ecpression (12) shows that the error terms of the local projection 
+\begin_inset Formula $u_{t+s}^{s}$
+\end_inset
+
+,
+ are a moving average of the forecast errors from time 
+\begin_inset Formula $t$
+\end_inset
+
+ to 
+\begin_inset Formula $t+s$
+\end_inset
+
+ ,
+ which can be used to improve efficiency.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Estimation of local projections and link to VAR structure.
+\end_layout
+
+\begin_layout Standard
+Since the true DGP is a var,
+ alle these separate LP equation are linked through their residual structure.
+ Thus we can stack all horizons into a single system and esitmate it jointly using GLS.
+\end_layout
+
+\begin_layout Paragraph
+Stacking the h-step ahead local projection
+\end_layout
+
+\begin_layout Standard
+To simplicy notation define:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $V_{t}=\left(v_{t+1},v_{t+2},...,v_{t+h}\right)^{\prime}$
+\end_inset
+
+,
+ which stacks the forecast errors for each horizon.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $X_{t}=\left(y_{t-1},y_{t-2},...,y_{t-p}\right)$
+\end_inset
+
+,
+ which is thte matrix of ressors (pst value of 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+We can now rewrite the entire system of h LPs as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+Y_{t}=X_{t}\Psi+V_{t}\Phi
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Where (ignoring the constant term) the parmeters matrices are constrained as follows:
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $Y_{t}$
+\end_inset
+
+ is the stacked vector of all horizons 
+\begin_inset Formula $y_{t+s}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $X_{t}$
+\end_inset
+
+ contains the lagged values of 
+\begin_inset Formula $y_{t}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\Psi$
+\end_inset
+
+ is the matrix of coefficients that determine how past value influecnce future values.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $V_{t}$
+\end_inset
+
+ is the stacked forecast erros.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\Phi$
+\end_inset
+
+;
+ A transformation matrix that links errors across horizons.
+\end_layout
+
+\begin_layout Standard
+Thus we just estimate one large system of equations.
+ And we got htat:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\Psi=\left[\begin{array}{cccc}
+F_{1}^{1} & F_{1}^{2} & ... & F_{1}^{h}\\
+F_{2}^{1} & F_{2}^{2} & ... & F_{1}^{h-1}\\
+... & ... & ... & ...\\
+F_{p}^{1} & F_{p}^{2} & ... & F_{p}^{h}
+\end{array}\right],\Phi=\left[\begin{array}{cccc}
+I_{n} & F_{1}^{1} & ... & F_{1}^{h}\\
+0 & I_{n} & ... & F_{1}^{h-1}\\
+\dots & \dots & \dots & \dots\\
+0 & 0 & ... & I_{n}
+\end{array}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\Psi$
+\end_inset
+
+:
+ Each 
+\begin_inset Formula $F_{i}^{s}$
+\end_inset
+
+ represent the effect of past values 
+\begin_inset Formula $y_{t-1}$
+\end_inset
+
+ on the future values.
+ 
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\Phi:$
+\end_inset
+
+ Ensures that residuals at different gorizons remain connected.
+ 
+\end_layout
+
+\begin_layout Standard
+If we thne define the variance-covariance matrix of residuals:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E\left(v_{t}v_{t}^{\prime}\right)=\Sigma_{v}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Since we stacked the Local Projections,
+ the variance of the entire system follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+E\left(V_{t}V_{t}^{\prime}\right)=\left(I_{h}\varotimes\Sigma_{v}\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where;
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $I_{h}$
+\end_inset
+
+ is the identity matrix of size h,
+ which account for the different forecast horizons.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $\varotimes$
+\end_inset
+
+ denotes the 
+\series bold
+Kronecker product
+\series default
+,
+ (All elements in A is multiplied with B).
+\end_layout
+
+\begin_layout Section
+Jorda & Taylor 2024
+\end_layout
+
+\begin_layout Section
+Ting jeg skal forstå:
+\end_layout
+
+\begin_layout Subsection
+VAR
+\end_layout
+
+\begin_layout Itemize
+Wold decomposition
+\end_layout
+
+\begin_layout Itemize
+covariance stationary time series,
+ can be written as a moving average (MA) process of past shocks.
+\end_layout
+
+\begin_layout Itemize
+Endogenitetsproblem
+\end_layout
+
+\begin_layout Subsection
+LP
+\end_layout
+
+\begin_layout Subsection
+VAR vs LP:
+\end_layout
+
+\begin_layout Itemize
+Bias/Variance tradeoff
+\end_layout
+
+\begin_layout Itemize
+What to do with small samples
+\end_layout
+
+\end_body
+\end_document
