@@ -14,7 +14,7 @@ if (user == "OscarEAM") {
 } else if (user == "Oscar_dream") {
   setwd("HER_INDSÆT_STI_FOR_OSCAR_DREAM")
 } else if (user == "Kasper") {
-  setwd("HER_INDSÆT_STI_FOR_KASPER")
+  setwd("HER_INDSÆT_STI_FOR_KASPER her")
 } else {
   stop("Ukendt bruger – tilføj sti for denne bruger.")
 }
