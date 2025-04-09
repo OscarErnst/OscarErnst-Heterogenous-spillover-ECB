@@ -7,8 +7,8 @@ user <- Sys.info()[["user"]]
 
 if (user == "OscarEAM") {
   setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Økonomi - Kandidat/Heterogenous-spillover-ECB/")
-} else if (user == "Oscar_dream") {
-  setwd("HER_INDSÆT_STI_FOR_OSCAR_DREAM")
+} else if (user == "B362561") {
+  setwd("C:/Users/B362561/Desktop/OscarErnst-Heterogenous-spillover-ECB-3")
 } else if (user == "Kasper") {
   setwd("HER_INDSÆT_STI_FOR_KASPER")
 } else {
@@ -45,9 +45,13 @@ load_data <- function(file_path, error_msg) {
   readRDS(file_path)
 }
 
+start_date_expected <- as.Date("2005-01-01")
+end_date_expected <- as.Date("2019-12-01")
 target_m <- load_data(file.path("Data", "Shocks", "Target Factor Shock.rds"),
                       "Target Factor Shock file not found!")
 target_m <- ts(target_m, start = start_month, end = end_month, frequency = 12)
+
+# Burde gå fra 2005 - 2020 og have [1:180] data punkter
 
 control <- load_data(file.path("Data", "Interpolated data", "control_var_m.rds"),
                      "Control variables file not found!")
@@ -62,12 +66,15 @@ d_HICP_m <- create_ts(control, "d_HICP_m", start_date, end_date)
 target_m <- window(target_m, start = start_month, end = end_month)
 d_rGDP_m <- window(d_rGDP_m, start = start_month, end = end_month)
 d_HICP_m <- window(d_HICP_m, start = start_month, end = end_month)
+# Burde gå fra 2005 - 2020 og have [1:180] data punkter
 
+# Henter nu bundesbank data
 Bundes_yield <- read_excel(file.path("Data", "Generic Bundesbank yield.xlsx"))
 Bund_3M_m <- ts(Bundes_yield[[2]], start = start_month, frequency = 12)
 d_Bund_3M_m <- diff(Bund_3M_m) * 100
 d_Bund_3M_m <- window(ts(c(NA, d_Bund_3M_m), start = start_month, frequency = 12), start = start_month, end = end_month)
 Bund_3M_m <- window(Bund_3M_m, start = start_month, end = end_month)
+# Burde gå fra 2005 - 2020 og have [1:180] data punkter
 
 # -------------------------------------------------------------------------
 # 3. Combine Data and Create Time Series Object
@@ -88,8 +95,8 @@ shocks_ts <- ts(shocks_data, start = start_month, frequency = 12)
 # 4. First-Stage Regression
 # -------------------------------------------------------------------------
 FirstStage <- dynlm(
-  d_Bund_3M_m ~ target_m + L(target_m, 1:5) +
-    L(d_Bund_3M_m, 1:6) + L(rGDPm_logchg, 1:6) + L(HICPm_logchg, 1:6),
+  Bund_3M_m ~ target_m + L(target_m, 1:12) +
+    L(Bund_3M_m, 1:12) + L(rGDPm_logchg, 1:12) + L(HICPm_logchg, 1:12),
   data = shocks_ts
 )
 
@@ -103,8 +110,8 @@ cat("\nJoint F-test Results:\n")
 print(joint_test)
 
 # Newey-West standard errors
-cat("\nNewey-West Standard Errors:\n")
-print(coeftest(FirstStage, vcov = NeweyWest(FirstStage)))
+#cat("\nNewey-West Standard Errors:\n")
+#print(coeftest(FirstStage, vcov = NeweyWest(FirstStage)))
 
 # -------------------------------------------------------------------------
 # 5. Create and Save Quarterly Instrument
@@ -116,7 +123,7 @@ create_quarterly_ts <- function(monthly_data) {
   quarterly_zoo <- aggregate(monthly_zoo, as.yearqtr, mean)
   as.ts(quarterly_zoo)
 }
-
+# OBS: Vi mister de første 2 kvartaler, da vi bruger 5 lags i 1.stage.
 shock_var_q_ts <- create_quarterly_ts(Bund_3M_m_hat)
 
 # Create directory if needed and save file

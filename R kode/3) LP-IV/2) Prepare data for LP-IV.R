@@ -2,7 +2,7 @@
 # (Data Preparation)
 #########################################################################
 
-# --- Clear workspace & set working directory -------------------------
+# Clear workspace and console
 rm(list = ls())
 cat("\014")
 
@@ -10,9 +10,9 @@ cat("\014")
 user <- Sys.info()[["user"]]
 
 if (user == "OscarEAM") {
-  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Økonomi - Kandidat/Heterogenous-spillover-ECB")
-} else if (user == "Oscar_dream") {
-  setwd("HER_INDSÆT_STI_FOR_OSCAR_DREAM")
+  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Økonomi - Kandidat/Heterogenous-spillover-ECB/")
+} else if (user == "B362561") {
+  setwd("C:/Users/B362561/Desktop/OscarErnst-Heterogenous-spillover-ECB-3")
 } else if (user == "Kasper") {
   setwd("HER_INDSÆT_STI_FOR_KASPER")
 } else {
@@ -27,10 +27,11 @@ library(readxl)
 #########################################################################
 # 1. Load Endogenous Variables (Controls and Outcomes)
 #########################################################################
-data <- readRDS(file.path("Data", "Control Variables", "Eurozone_country_variables.rds")) %>%
+control <- readRDS(file.path("Data", "Control Variables", "Eurozone_country_variables.rds")) %>%
   filter(country == "EA20") %>%
   dplyr::select(-country) %>%
-  filter(!(year == 2005 & quarter %in% c(1, 2))) %>%
+  #filter(!(year == 2005 & quarter %in% c(1, 2)))
+  filter(year > 2005) %>% 
   dplyr::select(d_rGDP, d_HICP, d_Consumption)
 
 #########################################################################
@@ -42,18 +43,13 @@ bund_yield <- read_excel(file.path("Data", "Generic Bundesbank yield.xlsx")) %>%
          Quarter = floor_date(Date, unit = "quarter")) %>%
   group_by(Quarter) %>%
   summarise(bund_yield = mean(`6M`, na.rm = TRUE), .groups = "drop") %>%
-  filter(Quarter >= as.Date("2005-06-01") & Quarter <= as.Date("2019-12-31"))
+  filter(Quarter >= as.Date("2006-01-01") & Quarter <= as.Date("2019-12-31"))
 
 #########################################################################
 # 3. Merge Bund Yield with Data
 #########################################################################
-data <- cbind(data, bund_yield = bund_yield$bund_yield[1:nrow(data)])
-rm(bund_yield)
-
-#########################################################################
-# 4. Define Outcome Variables for LP-IV Estimation
-#########################################################################
-outcome_vars <- c("d_HICP", "d_rGDP", "d_Consumption", "bund_yield")
+data <- cbind(control, bund_yield = bund_yield$bund_yield[1:nrow(control)])
+rm(bund_yield, control)
 
 #########################################################################
 # 5. Load the Instrument (Pure Target Shock)
@@ -77,4 +73,5 @@ if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
 
 # Save final dataset
 saveRDS(data, file = file.path(output_dir, "input_data.rds"))
+saveRDS(target_q, file = file.path(output_dir, "instrument.rds"))
 
