@@ -23,7 +23,9 @@ library(dplyr)
 library(zoo)
 library(eurostat)
 
-# List of countries: for this example, we focus on EA20
+# Indstillinger:
+start_date <- c(2001, 1)
+end_date   <- c(2024, 1)
 countries <- c("EA20")
 
 # Create the full dataset and filter for EA20 for rGDP
@@ -47,9 +49,6 @@ rGDP_q_ts <- ts(
 )
 
 # Download monthly indicators from Eurostat
-start_date <- c(2001, 1)
-end_date   <- c(2024, 1)
-
 # Unemployment
 unemp_data <- get_eurostat("une_rt_m",
                            time_format = "num",
@@ -60,7 +59,7 @@ unemp_data <- get_eurostat("une_rt_m",
                              sex   = "T",
                              age   = "TOTAL"
                            ))
-unemployment <- ts(unemp_data$values, start = c(1983, 1), frequency = 12)
+unemployment <- ts(unemp_data$values, start = start_date, frequency = 12)
 unemployment <- window(unemployment, start = start_date, end = end_date)
 
 # Industrial Production

@@ -2,15 +2,15 @@
 rm(list = ls())
 cat("\014")
 
-# Set working directory based on user
+# Set working directory based on system user
 user <- Sys.info()[["user"]]
 
 if (user == "OscarEAM") {
-  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Økonomi - Kandidat/Heterogenous-spillover-ECB/")
-} else if (user == "B362561") {
-  setwd("C:/Users/B362561/Desktop/OscarErnst-Heterogenous-spillover-ECB-3")
-} else if (user == "Kasper") {
-  setwd("HER_INDSÆT_STI_FOR_KASPER")
+  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB")
+} else if (user == "Oscar_dream") {
+  setwd("HER_INDSÆT_STI_FOR_OSCAR_DREAM")
+} else if (user == "kasper") {
+  setwd("/Users/kasper/Documents/GitHub/OscarErnst-Heterogenous-spillover-ECB")
 } else {
   stop("Ukendt bruger – tilføj sti for denne bruger.")
 }
@@ -37,6 +37,10 @@ end_month   <- c(2019, 12)
 start_date <- as.Date(sprintf("%d-%02d-01", start_month[1], start_month[2]))
 end_date   <- as.Date(sprintf("%d-%02d-01", end_month[1], end_month[2]))
 
+create_ts <- function(data, var_name, start_date, end_date) {
+  ts(data[[var_name]], start = c(year(start_date), month(start_date)), frequency = 12)
+}
+
 # -------------------------------------------------------------------------
 # 2. Load and Validate Data
 # -------------------------------------------------------------------------
@@ -45,48 +49,47 @@ load_data <- function(file_path, error_msg) {
   readRDS(file_path)
 }
 
-start_date_expected <- as.Date("2005-01-01")
-end_date_expected <- as.Date("2019-12-01")
-target_m <- load_data(file.path("Data", "Shocks", "Target Factor Shock.rds"),
-                      "Target Factor Shock file not found!")
-target_m <- ts(target_m, start = start_month, end = end_month, frequency = 12)
+# Henter shocks:
+shock <- load_data(
+  file.path("Instrumenter", "PureMP_shocks_m.rds"),
+  "PureMP_shocks_m.rds not found"
+) %>%
+  filter(year(Date) >= start_month[1], year(Date) <= end_month[1])
+pureMP_m <- ts(shock$target, start = start_month, end = end_month, frequency = 12)
 
-# Burde gå fra 2005 - 2020 og have [1:180] data punkter
-
-control <- load_data(file.path("Data", "Interpolated data", "control_var_m.rds"),
-                     "Control variables file not found!")
-
-create_ts <- function(data, var_name, start_date, end_date) {
-  ts(data[[var_name]], start = c(year(start_date), month(start_date)), frequency = 12)
-}
+# Henter Kontrol Variable:
+control <- load_data(
+  file.path("Data", "Interpolated data", "control_var_m.rds"),
+  "control_var_m.rds not found"
+) %>%
+  filter(year(Date) >= start_month[1], year(Date) <= end_month[1])
 
 d_rGDP_m <- create_ts(control, "d_rGDP_m", start_date, end_date)
 d_HICP_m <- create_ts(control, "d_HICP_m", start_date, end_date)
 
-target_m <- window(target_m, start = start_month, end = end_month)
-d_rGDP_m <- window(d_rGDP_m, start = start_month, end = end_month)
-d_HICP_m <- window(d_HICP_m, start = start_month, end = end_month)
-# Burde gå fra 2005 - 2020 og have [1:180] data punkter
+# Henter nu Bundesbank data
+Bund_length <- "6M"
+Bundes_yield <- read_excel(file.path("Data", "Generic Bundesbank yield.xlsx")) %>%
+  filter(year(Date) >= start_month[1], year(Date) <= end_month[1])
 
-# Henter nu bundesbank data
-Bundes_yield <- read_excel(file.path("Data", "Generic Bundesbank yield.xlsx"))
-Bund_3M_m <- ts(Bundes_yield[[2]], start = start_month, frequency = 12)
-d_Bund_3M_m <- diff(Bund_3M_m) * 100
-d_Bund_3M_m <- window(ts(c(NA, d_Bund_3M_m), start = start_month, frequency = 12), start = start_month, end = end_month)
-Bund_3M_m <- window(Bund_3M_m, start = start_month, end = end_month)
-# Burde gå fra 2005 - 2020 og have [1:180] data punkter
+Bund_6M_m <- ts(Bundes_yield[[Bund_length]], start = start_month, frequency = 12)
+d_Bund_6M_m <- diff(Bund_6M_m) * 100
+d_Bund_6M_m <- window(ts(c(NA, d_Bund_6M_m), start = start_month, frequency = 12),
+                      start = start_month, end = end_month)
+Bund_6M_m <- window(Bund_6M_m, start = start_month, end = end_month)
+# Should go from 2005 to 2020 and have [1:180] data points
 
 # -------------------------------------------------------------------------
 # 3. Combine Data and Create Time Series Object
 # -------------------------------------------------------------------------
 shocks_data <- cbind(
-  target_m       = as.numeric(target_m),
-  d_Bund_3M_m    = as.numeric(d_Bund_3M_m),
-  Bund_3M_m      = as.numeric(Bund_3M_m),
-  rGDPm_logchg   = as.numeric(d_rGDP_m),
-  HICPm_logchg   = as.numeric(d_HICP_m),
-  GFC_dummy = ifelse(as.yearmon(time(target_m)) >= as.yearmon("2007-01") &
-                       as.yearmon(time(target_m)) <= as.yearmon("2007-09"), 1, 0)
+  pureMP_m       = as.numeric(pureMP_m),
+  d_Bund_6M_m    = as.numeric(d_Bund_6M_m),
+  Bund_6M_m      = as.numeric(Bund_6M_m),
+  d_rGDP_m       = as.numeric(d_rGDP_m),
+  d_HICP_m       = as.numeric(d_HICP_m),
+  GFC_dummy = ifelse(as.yearmon(time(pureMP_m)) >= as.yearmon("2007-01") &
+                       as.yearmon(time(pureMP_m)) <= as.yearmon("2007-09"), 1, 0)
 )
 
 shocks_ts <- ts(shocks_data, start = start_month, frequency = 12)
@@ -95,8 +98,8 @@ shocks_ts <- ts(shocks_data, start = start_month, frequency = 12)
 # 4. First-Stage Regression
 # -------------------------------------------------------------------------
 FirstStage <- dynlm(
-  Bund_3M_m ~ target_m + L(target_m, 1:12) +
-    L(Bund_3M_m, 1:12) + L(rGDPm_logchg, 1:12) + L(HICPm_logchg, 1:12),
+  Bund_6M_m ~ pureMP_m + L(pureMP_m, 1:12) +
+    L(Bund_6M_m, 1:12) + L(d_rGDP_m, 1:12) + L(d_HICP_m, 1:12),
   data = shocks_ts
 )
 
@@ -104,34 +107,33 @@ cat("\nFirst Stage Regression Results:\n")
 print(summary(FirstStage))
 
 # Joint significance test
-joint_test <- linearHypothesis(FirstStage,
-                               paste(names(coef(FirstStage))[grepl("target_m", names(coef(FirstStage)))], "= 0"))
+joint_test <- linearHypothesis(
+  FirstStage,
+  paste(names(coef(FirstStage))[grepl("pureMP_m", names(coef(FirstStage)))], "= 0")
+)
 cat("\nJoint F-test Results:\n")
 print(joint_test)
 
 # Newey-West standard errors
-#cat("\nNewey-West Standard Errors:\n")
-#print(coeftest(FirstStage, vcov = NeweyWest(FirstStage)))
+cat("\nNewey-West Standard Errors:\n")
+print(coeftest(FirstStage, vcov = NeweyWest(FirstStage)))
 
 # -------------------------------------------------------------------------
 # 5. Create and Save Quarterly Instrument
 # -------------------------------------------------------------------------
-Bund_3M_m_hat <- fitted.values(FirstStage)
+Bund_6M_m_hat <- fitted.values(FirstStage)
 
 create_quarterly_ts <- function(monthly_data) {
   monthly_zoo <- zoo(coredata(monthly_data), as.yearmon(time(monthly_data)))
   quarterly_zoo <- aggregate(monthly_zoo, as.yearqtr, mean)
   as.ts(quarterly_zoo)
 }
-# OBS: Vi mister de første 2 kvartaler, da vi bruger 5 lags i 1.stage.
-shock_var_q_ts <- create_quarterly_ts(Bund_3M_m_hat)
 
-# Create directory if needed and save file
-lpiv_dir <- file.path("Data", "LP-IV")
-if (!dir.exists(lpiv_dir)) dir.create(lpiv_dir, recursive = TRUE)
+# OBS: We lose the first 2 quarters, as we use 12 lags in the 1.stage. 
+shock_var_q_ts <- create_quarterly_ts(Bund_6M_m_hat)
 
-saveRDS(shock_var_q_ts, file = file.path(lpiv_dir, "Target_instrument.rds"))
-cat("\nQuarterly instrument saved to", file.path(lpiv_dir, "Target_instrument.rds"), "\n")
+saveRDS(shock_var_q_ts, file = file.path("Data","LP-IV","Kun PureMP","Bund_instrument.rds"))
+cat("\nQuarterly instrument saved to", file.path("Data","LP-IV","Kun PureMP","Bund_instrument.rds"), "\n")
 
 # -------------------------------------------------------------------------
 # 6. Create Plots
@@ -148,25 +150,28 @@ save_plot <- function(filename, plot_func, width = 2000, height = 1200, res = 15
   dev.off()
 }
 
-# Plot 1: Actual vs Fitted Bund 3M
+# Plot 1: Actual vs Fitted Bund 6M
 plot_actual_fitted <- function() {
-  plot(shocks_ts[, "Bund_3M_m"], type = "l", col = burgundy_trans,
-       main = "Actual vs. Fitted Bund 3M",
-       xlab = "Time", ylab = "Bund 3M Yield (basis points)")
-  lines(Bund_3M_m_hat, col = burgundy, lwd = 2)
+  plot(shocks_ts[, "Bund_6M_m"], type = "l", col = burgundy_trans,
+       main = "Actual vs. Fitted Bund 6M",
+       xlab = "Time", ylab = "Bund 6M Yield (basis points)")
+  lines(Bund_6M_m_hat, col = burgundy, lwd = 2)
   legend("topright", legend = c("Actual", "Fitted"),
          col = c(burgundy_trans, burgundy), lty = 1, lwd = 2, cex = 1.2)
 }
 
-# Plot 2: Target Shock and Fitted Instrument
+# Plot 2: Pure MP Shock and Fitted Instrument
 plot_shock_fitted <- function() {
   par(mfrow = c(1, 2))
-  plot(shocks_ts[, "target_m"], type = "l",
-       main = "(a) Target Factor",
+  # (a) Plot the pure MP shock over time
+  plot(shocks_ts[, "pureMP_m"], type = "l",
+       main = "(a) Pure MP Shock",
        xlab = "Time", ylab = "Basis Points",
        col = burgundy, lwd = 2)
-  plot(Bund_3M_m_hat, type = "l",
-       main = "(b) Fitted Bund 3M Instrument",
+  
+  # (b) Plot the fitted 6M Bund instrument
+  plot(Bund_6M_m_hat, type = "l",
+       main = "(b) Fitted Bund 6M Instrument",
        xlab = "Time", ylab = "Fitted Value",
        col = burgundy, lwd = 2)
 }
@@ -174,13 +179,20 @@ plot_shock_fitted <- function() {
 # Plot 3: Quarterly Instrument
 plot_quarterly <- function() {
   plot(shock_var_q_ts,
-       main = "Quarterly Fitted Bund 3M Instrument",
-       xlab = "Time", ylab = "Instrument Value (Fitted Bund 3M)",
+       main = "Quarterly Fitted Bund 6M Instrument",
+       xlab = "Time", ylab = "Instrument Value (Fitted Bund 6M)",
        col = burgundy, lwd = 2)
 }
 
-# Save plots
-plot_dir <- file.path("Graphs", "Identify MP shock")
+# Save plots to the specified directory
+plot_dir <- file.path(
+  "/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen",
+  "OscarErnst-Heterogenous-spillover-ECB",
+  "Graphs",
+  "LP-IV",
+  "Kun PureMP"
+)
+
 save_plot(file.path(plot_dir, "Actual_vs_Fitted_Bund_6M.png"), plot_actual_fitted)
 save_plot(file.path(plot_dir, "Shock_and_Fitted_Panel.png"), plot_shock_fitted, height = 1600)
 save_plot(file.path(plot_dir, "Quarterly_Instrument.png"), plot_quarterly)

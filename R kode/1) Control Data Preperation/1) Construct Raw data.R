@@ -14,12 +14,19 @@ if (user == "OscarEAM") {
 }
 # Use working directory-relative paths
 source(file.path("R kode", "Functions","Functions.R"))
-       
-       
 source(file.path("R kode", "Functions", "Load_Packages.R"))
 library(dplyr)
 library(zoo)
 library(eurostat)
+
+
+# Indstillinger:
+# List of countries: EA20 plus additional countries
+countries <- c("EA20", "AT", "BE", "CY", "EE", "FI", "FR", "DE", "EL", "IE", 
+               "IT", "LV", "LT", "LU", "MT", "NL", "PT", "SK", "SI", "ES", "DK")
+start_year <- 2000
+end_year <- 2019
+
 
 # Load required packages with error handling
 required_packages <- c("dplyr", "AER", "dynlm", "car", "zoo", "readxl", "stargazer", "lubridate", "purrr")
@@ -30,9 +37,7 @@ for (pkg in required_packages) {
   }
 }
 
-# List of countries: EA20 plus additional countries (allows flexibility)
-countries <- c("EA20", "AT", "BE", "CY", "EE", "FI", "FR", "DE", "EL", "IE", 
-               "IT", "LV", "LT", "LU", "MT", "NL", "PT", "SK", "SI", "ES", "DK")
+
 
 # 1) Create the full dataset by merging country-specific data
 raw_data <- map_dfr(countries, ~ get_country_dataset(.x))
@@ -52,7 +57,7 @@ d <- calc_log_yoy_change(
   vars = c("HICP", "rGDP", "Consumption")
 ) %>%
   # Filter the sample to be from 2005 until 2019 (pre-pandemic)
-  filter(year > 2004 & year < 2020)
+  filter(year >= start_year & year < end_year)
 
 # 4) Rename those yoy log-change columns
 d <- d %>% rename(

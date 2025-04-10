@@ -1,6 +1,6 @@
 rm(list=ls())
 cat("\014")
-setwd("C:/Foreign_SVAR")
+#setwd("C:/Foreign_SVAR")
 
 library(readxl)
 library(OECD) #https://github.com/expersso/OECD

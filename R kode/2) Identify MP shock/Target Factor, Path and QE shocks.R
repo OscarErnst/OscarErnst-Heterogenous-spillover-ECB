@@ -1,10 +1,19 @@
-rm(list=ls())
+# Clear workspace and console
+rm(list = ls())
 cat("\014")
-setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Økonomi - Kandidat/Heterogenous-spillover-ECB/Data")
-set.seed(4)
-#Code inspired by https://github.com/martinbaumgaertner/hfdshocks/blob/main/R/rotate.R
-source("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Økonomi - Kandidat/Heterogenous-spillover-ECB/Tamas filer/load_Packages.R")
-library("MSBVAR")
+
+# Set working directory based on system user
+user <- Sys.info()[["user"]]
+
+if (user == "OscarEAM") {
+  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB")
+} else if (user == "Oscar_dream") {
+  setwd("HER_INDSÆT_STI_FOR_OSCAR_DREAM")
+} else if (user == "kasper") {
+  setwd("/Users/kasper/Documents/GitHub/OscarErnst-Heterogenous-spillover-ECB")
+} else {
+  stop("Ukendt bruger – tilføj sti for denne bruger.")
+}
 monthly=TRUE
 aggregate = "mean"
 window="monetary event" #or "conference"
@@ -22,15 +31,15 @@ GK2015 = FALSE
 #Specify crisis date for identification of the 3rd factor
 crisis_date="2008-09-04"
 
-press <- read_excel("Dataset_EA-MPD.xlsx", sheet = "Press Release Window")
+press <- read_excel("Data/Dataset_EA-MPD.xlsx", sheet = "Press Release Window")
 press[is.na(press)] <- 0
 press <- subset(press, select = HFI_variables)
 
-conf <- read_excel("Dataset_EA-MPD.xlsx", sheet = "Press Conference Window")
+conf <- read_excel("Data/Dataset_EA-MPD.xlsx", sheet = "Press Conference Window")
 conf[is.na(conf)] <- 0
 conf <- subset(conf, select = HFI_variables)
 
-me <- read_excel("Dataset_EA-MPD.xlsx", sheet = "Monetary Event Window")
+me <- read_excel("Data/Dataset_EA-MPD.xlsx", sheet = "Monetary Event Window")
 me[is.na(me)] <- 0
 me <- subset(me, select = HFI_variables)
 
@@ -392,21 +401,21 @@ if(window == "release" | window == "monetary event"){
 HFI_FinVar <- c("OIS_1M", "OIS_3M", "OIS_6M", "OIS_1Y", "OIS_2Y", "OIS_5Y", "OIS_10Y", "STOXX50")
 
 if (window == "release"){
-  FinVar <- read_excel("Dataset_EA-MPD.xlsx", sheet = "Press Release Window") 
+  FinVar <- read_excel("Data/Dataset_EA-MPD.xlsx", sheet = "Press Release Window") 
   FinVar[is.na(FinVar)] <- 0
   FinVar <- subset(FinVar, select = HFI_FinVar)
   shock <- factors_scaled$Target
   shocks <-cbind(factors_scaled$Target, factors_scaled$Path, factors_scaled$QE)
   regdata <- cbind(FinVar, shock)
 }else if (window == "monetary event"){
-  FinVar <- read_excel("Dataset_EA-MPD.xlsx", sheet = "Monetary Event Window") 
+  FinVar <- read_excel("Data/Dataset_EA-MPD.xlsx", sheet = "Monetary Event Window") 
   FinVar[is.na(FinVar)] <- 0
   FinVar <- subset(FinVar, select = HFI_FinVar)
   shock <- factors_scaled$Target
   shocks <-cbind(factors_scaled$Target, factors_scaled$Path, factors_scaled$QE)
   regdata <- cbind(FinVar, shocks) #NOTE! shock
 } else {
-  FinVar <- read_excel("Dataset_EA-MPD.xlsx", sheet = "Press Conference Window") 
+  FinVar <- read_excel("Data/Dataset_EA-MPD.xlsx", sheet = "Press Conference Window") 
   FinVar[is.na(FinVar)] <- 0
   FinVar <- subset(FinVar, select = HFI_FinVar)
   shock <- factors_scaled$FG
@@ -643,10 +652,28 @@ if (window == "release" || window == "monetary event") {
   
   save(FG_q, FG_m,FGMP_q, FGMP_m, file="Own_mpshock_conference.RData")  
 }
-all_shocks <- list(
+all_shocks <- data.frame(
   pureMP_m = pureMP_m,
   Path_m   = Path_m,
   QE_m     = QE_m
 )
 
-saveRDS(all_shocks, file = "Shocks/all_3_shocks.rds")
+all_shocks <- cbind(all_dates, all_shocks)
+
+# 1) Convert (year, month) into a Date column
+all_shocks$Date <- as.Date(sprintf("%04d-%02d-01", 
+                                   all_shocks$year, 
+                                   all_shocks$month), 
+                           format = "%Y-%m-%d")
+
+# 2) Reorder columns so Date is first
+all_shocks <- all_shocks[, c("Date", "year", "month", "pureMP_m", "Path_m", "QE_m")]
+
+# 3) (Optional) If you don’t need separate year/month columns anymore, drop them:
+all_shocks <- all_shocks[, c("Date", "pureMP_m", "Path_m", "QE_m")]
+
+# 4) Save to RDS
+saveRDS(all_shocks, file = "Data/LP-IV/Alle shocks/all_3_shocks.rds")
+
+# Check the result
+head(all_shocks)

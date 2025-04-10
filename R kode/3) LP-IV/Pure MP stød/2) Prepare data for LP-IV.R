@@ -1,20 +1,16 @@
-#########################################################################
-# (Data Preparation)
-#########################################################################
-
 # Clear workspace and console
 rm(list = ls())
 cat("\014")
 
-# Set working directory based on user
+# Set working directory based on system user
 user <- Sys.info()[["user"]]
 
 if (user == "OscarEAM") {
-  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Økonomi - Kandidat/Heterogenous-spillover-ECB/")
-} else if (user == "B362561") {
-  setwd("C:/Users/B362561/Desktop/OscarErnst-Heterogenous-spillover-ECB-3")
-} else if (user == "Kasper") {
-  setwd("HER_INDSÆT_STI_FOR_KASPER")
+  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB")
+} else if (user == "Oscar_dream") {
+  setwd("HER_INDSÆT_STI_FOR_OSCAR_DREAM")
+} else if (user == "kasper") {
+  setwd("/Users/kasper/Documents/GitHub/OscarErnst-Heterogenous-spillover-ECB")
 } else {
   stop("Ukendt bruger – tilføj sti for denne bruger.")
 }
@@ -24,7 +20,7 @@ library(dplyr)
 library(lubridate)
 library(readxl)
 
-size_of_bund <- "2Y"
+size_of_bund <- "1Y"
 
 #########################################################################
 # 1. Load Endogenous Variables (Controls and Outcomes)
@@ -56,10 +52,10 @@ rm(bund_yield, control)
 #########################################################################
 # 5. Load the Instrument (Pure Target Shock)
 #########################################################################
-target_q <- readRDS(file.path("Data", "LP-IV", "Target_instrument.rds"))
+target_q <- readRDS(file.path("Data","LP-IV","Kun PureMP","Bund_instrument.rds"))
 
 # Restrict target_q to the same window as the other data
-#target_q <- window(target_q, start = c(2005, 3), end = c(2019, 4))
+target_q <- window(target_q, start = c(2006, 1), end = c(2019, 4))
 
 # Ensure it matches the number of rows in 'data'
 target_q <- as.numeric(target_q[1:nrow(data)])
@@ -70,10 +66,8 @@ target_q <- as.numeric(target_q[1:nrow(data)])
 data <- cbind(data, target_q = target_q)
 
 # Ensure output directory exists
-output_dir <- file.path("Data", "LP-IV")
-if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
+output_dir <- file.path("Data", "LP-IV", "Kun PureMP")
 
 # Save final dataset
 saveRDS(data, file = file.path(output_dir, "input_data.rds"))
-saveRDS(target_q, file = file.path(output_dir, "instrument.rds"))
 

@@ -6,15 +6,15 @@
 rm(list = ls())
 cat("\014")
 
-# Set working directory based on user
+# Set working directory based on system user
 user <- Sys.info()[["user"]]
 
 if (user == "OscarEAM") {
-  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Økonomi - Kandidat/Heterogenous-spillover-ECB/")
-} else if (user == "B362561") {
-  setwd("C:/Users/B362561/Desktop/OscarErnst-Heterogenous-spillover-ECB-3")
-} else if (user == "Kasper") {
-  setwd("HER_INDSÆT_STI_FOR_KASPER")
+  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB")
+} else if (user == "Oscar_dream") {
+  setwd("HER_INDSÆT_STI_FOR_OSCAR_DREAM")
+} else if (user == "kasper") {
+  setwd("/Users/kasper/Documents/GitHub/OscarErnst-Heterogenous-spillover-ECB")
 } else {
   stop("Ukendt bruger – tilføj sti for denne bruger.")
 }
