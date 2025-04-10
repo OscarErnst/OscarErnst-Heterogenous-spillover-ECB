@@ -1,0 +1,260 @@
+000a40c19b6d97a10b838b3e991bccbef8a8982f
+3dd253703fbe69d7d9a6072a3ae353ed6800d19d
+3ebc763866647f37b6514dcffb2f611ab8e16858
+50db30cd62cf659cd67def7b36f7f602ed284215
+53691efc4e10c093078ea3f341a2861bc4b787da
+ba180aca9abcde4a16bc10b85aed09377f2037d3
+c5aef626914b8abd72556e1a31383ed13461182d
+f5f63be16e17f28bd3e08a358c28491db948374e
+fa95e343e890c319729fc8c5c250bd79b9ed73b9
+06775a63e87bffb8f3bc0f71ab93c3125a4c7b17 
+085da487842158f382a3a83b95e816af6581a5ca 
+78f738989e873ee5ff7fd2b2df26cb1b08d61dbd 
+7d6523cd0f46c23b02583fc06d4a027ddc7d86fa 
+90c2b027f1dc51da661439483f4ed9c3b583202c 
+95fd040faa82cac42710c857da88ad718499bf70 
+c12a1c01999e1e50ed817fb11fe982f4dbcb0d69 
+df5d9cd28450a11cd060cc06e786e6ef761c2233 
+ea0f53f5bdde3cd7448f405da1993a9596f9d161 
+66dafb467fb556e0ae44af3cafe68666b98b7003 .DS_Store
+7db085fee1a42c583194311e9ae20800cc594ba8 .DS_Store
+e073dd161822d776c83cc163a1c7a9e411c064ac .DS_Store
+c5044b233cfa4c60ea2b8c61e8a60db4c23e885f .Rhistory
+15851e4c95965ab6dbe2febf3bafb88bd711137a Data
+300ed1e81d624cad68848386939ef20fb19affa9 Data
+4df4456a858ef43373c34a69e067d78a0a90410e Data
+69c9b805982ae670b016385c24a781ac27eb64db Data
+a80840be4a4c9b2e233299219567ac83cc39dbbe Data
+33e2b236a421641718e1f1f0c1fc2e6d62de863a Data/.DS_Store
+8ebc2efe5642f3bf78980834524e3b4bd147d112 Data/.DS_Store
+df128cd43eac2361b26e87896008d1d8c4d96661 Data/.DS_Store
+227847c394067fa5474aa24009e77e654b7a01ff Data/.Rhistory
+0d33e0de3c592776f30f2e866d1782110fe5e215 Data/Bloomberg data
+82f534d39985b155167fc8611fa357e41530922b Data/Bloomberg data/.DS_Store
+cdea882b79636f967534e839e3f1ffa0e7b76ce4 Data/Bloomberg data/ESTR 1W.xlsx
+7bfbbc31edcf9ceedf804c209289d92748c39760 Data/Bloomberg data/ESTR 1Y.xlsx
+edfe6b0b148a8b2c3495f42debba447d2386bdd5 Data/Bloomberg data/ESTR 5Y.xlsx
+0f1f22eaf7cc050915ed54494e84071cea4131ae Data/Control Variables
+35f66ad1a039b71f9a2f7437d267c78057b9528c Data/Control Variables
+0a043ea8dba2ddf883d8b5c634de1938c90346e2 Data/Control Variables/Eurozone_country_variables.rds
+1436098a2cc18b2e77bac4dee6dddc269cb5c84f Data/Control Variables/Eurozone_country_variables.rds
+205e8cc40c1c0fa7370ec1291b9e746e5676bddb Data/Dataset_EA-MPD.xlsx
+587716ff954fe5a97c73e5568fcd79cd4e9a21d5 Data/Generic Bundesbank yield.xlsx
+5a832d3c7c489d9f9143784d83c24b8ef206bcf1 Data/Generic Bundesbank yield.xlsx
+c3f6ba7613d433d586d3084192cf1d953a0bc7b8 Data/Interpolated data
+5008ddfcf53c02e82d7eee2e57c38e5672ef89f6 Data/Interpolated data/.DS_Store
+3e14d8678f43f888f15bf7af2b6a87d79d329a3a Data/Interpolated data/control_var_m.rds
+5b3965189d011281585b36b972e2395d0065e49b Data/LP-IV
+93d3fdfcb75be68f32ade22745b9645e134f5ea0 Data/LP-IV
+ddfd80e3781eed3706a9b6b54dc150114f15c03e Data/LP-IV
+f3e9c06d26ac0968414e8f3b4f9c0ad0c13d89c6 Data/LP-IV
+3d8bfe9d37bc5e23d06d3d70e4b053d0942032a1 Data/LP-IV/.DS_Store
+4b453f745e65f735936d4cc146849b790c4065fe Data/LP-IV/Alle shocks
+2763526d507e41aa3fc62d49ded937a96162ed22 Data/LP-IV/Alle shocks/Bund_instrument.rds
+f01243736e4d1e32d359b856381e7877af25d6b4 Data/LP-IV/Alle shocks/all_3_shocks.rds
+7a4e73f682ee56092686a9513e3b4c7a958ec928 Data/LP-IV/Andet
+68e163d2122a3ae6ca6ce8637c01e88fcc209038 Data/LP-IV/Andet/LP-IV_input_data.rds
+d9184fb42149e34508db5421561f4d5437d1d389 Data/LP-IV/Andet/Tamas_instrument.rds
+cfdd538561a6fdb4b07d33e33b1e8cf1bbbe539a Data/LP-IV/Andet/Target_instrument.rds
+b08da70ddb313ae4b76b427e38f0785a2824d87b Data/LP-IV/Andet/input_data.rds
+d2386c1f1d7e20665cb494966c5bdec393276739 Data/LP-IV/Andet/instrument.rds
+5eb5996bcfeb58a1c76f88de71630a926c497a90 Data/LP-IV/Kun PureMP
+5636b8230a897fd4608284915efb7521f2d8281b Data/LP-IV/Kun PureMP/Bund_instrument.rds
+cae1270a08eb52ac65a84eafcdc4b3b5cd2db9a6 Data/LP-IV/Kun PureMP/input_data.rds
+4d05bce6c2f19feb1e422be4c84fc39ea78374c5 Data/LP-IV/Target_instrument.rds
+a9a748bcf217219c511f041af1264cbd1af7c913 Data/LP-IV/input_data.rds
+b339e1b3971741c3595eac42a5c4e0401f95c0bf Data/LP-IV/input_data.rds
+5c29d7483d073ab8ab31b4abe9f18529e3d80ee1 Data/Own_mpshock_release.RData
+c29efe5fda34ddb61a3d08a4a987fec9a1d1b9d8 Data/Shocks
+e806a2e05a458cf4fefec5d03f3c7db0ac8271d0 Data/Shocks/Information Shock.rds
+455bee240f66c38fea0e9722fe9ec0bbc48d5329 Data/Shocks/Information Shock_Quarterly.rds
+9e676c9f91fa8e573d3fc8bcb7bd6d6ea537c379 Data/Shocks/Path_m.rds
+79cb048e44f7d37ac7f29047c7ae66b826cb4a0d Data/Shocks/QE_m.rds
+c5fc4ec90925b02db7cd99038e4b633e1a6ed07f Data/Shocks/Target Factor Shock.rds
+f12e51b47af601b3f7a15beaefb5c510812c4136 Data/Shocks/Target Factor Shock_Quarterly.rds
+6465c1aafa144f266b0f7a41702d9696c76ea46f Data/Shocks/all_3_shocks.rds
+b57f0ff7f97eba781b300e7213bea74eb46f01ac Data/Shocks/check.rds
+99d2cd7ce04c7471f4c026e0ba814b596c5ec586 Data/Shocks/pureMP_m.rds
+0e1652a34da5819c0b039dc0f34b8313b70843c1 Graphs
+7b4db08ad4b80ee9e530e0a57e92704699fa002a Graphs
+ad8f693372d5c9f8358357860877e402b9439b64 Graphs
+b61efda91d43c1935d326502f477fe0b1c706cdd Graphs
+24ab2bb3d898719f47fecc94a0ff6ea84d3d38e3 Graphs/.DS_Store
+dd686a85908147b6d7e6b7981ab30bac102e2b3f Graphs/.DS_Store
+21da815c900c61c7cceff8ac8601637cb840031a Graphs/Identify MP shock
+50ee90e4e349e4fb578a84916e10ffee0dac86bf Graphs/Identify MP shock
+81696757bf9a0811d916b17748f632f78d99bb01 Graphs/Identify MP shock
+aa03716224cbc7aba3a190df0f8f56404a4fb2a4 Graphs/Identify MP shock
+80d425f5bee9ac7fd4678810dda9f8650fb7fbfe Graphs/Identify MP shock/.DS_Store
+02dc3aa64aff5195c0f121773ec61b3a2f762519 Graphs/Identify MP shock/Actual_vs_Fitted_Bund_6M.png
+0e864375ac51d103371dbdae3a79649a2edd98c7 Graphs/Identify MP shock/Actual_vs_Fitted_Bund_6M.png
+1f66c5a98ba2b6f736cd02efaa813928ecf62204 Graphs/Identify MP shock/Actual_vs_Fitted_Bund_6M.png
+33ea5d52740bf7388ff9ebdd02983b44eacfc037 Graphs/Identify MP shock/Actual_vs_Fitted_Bund_6M.png
+3437f63f75ed0c248c57ebb897f78cdd157da9c7 Graphs/Identify MP shock/Info_vs_MP_shock.png
+2ab6d698c8fb232d65143855228362a801ad6f9e Graphs/Identify MP shock/Quarterly_Instrument.png
+86ee68f8fe54147ddd2edf133dbc977f9e27fe94 Graphs/Identify MP shock/Quarterly_Instrument.png
+ed6e96e4192886252e3de3363b54950c91038b5d Graphs/Identify MP shock/Quarterly_Instrument.png
+2611cde95df2c08914bd5b11b87d58f48044b1fc Graphs/Identify MP shock/Shock_and_Fitted_Panel.png
+35bf33e0422b04e606744018b48951ab7cac9bc7 Graphs/Identify MP shock/Shock_and_Fitted_Panel.png
+86dd713ab64fadc1128286490d29485d8930ff22 Graphs/Identify MP shock/Shock_and_Fitted_Panel.png
+9dc87f4d22f2e6c37bb7d03dd86797d4ce87606f Graphs/Identify MP shock/Shock_and_Fitted_Panel.png
+60e9a3072e16f24fe04755b2eb367c0f1a4bee2c Graphs/LP-IV
+72ea168be4dc65da8e83a0ba212e11c5e561b83d Graphs/LP-IV
+8b55441d305964ebd5f5740c6bbb4d84f361f221 Graphs/LP-IV
+f430500581e1a52646f7fc63059a904c48b1cdc0 Graphs/LP-IV
+1b8cedb70747e88b3e4c9421177a61add781bfae Graphs/LP-IV/.DS_Store
+c068f91154797156b8966455a0776f4c6386d9b5 Graphs/LP-IV/Actual_vs_Fitted_Bund_6M.png
+5a0d5fae190fd53bd9915eecfba6dfa6a8a4ae2d Graphs/LP-IV/Alle shocks
+022373a9104130049a5ed508558798be6322ff73 Graphs/LP-IV/Alle shocks/Actual_vs_Fitted_Bund_6M.png
+f84c66e07c83e34e432a7b536921d3232fc935de Graphs/LP-IV/Alle shocks/All_Shocks_2x2.png
+53ad95d17da6954a00ec6f0c6e36c4127ac46dd5 Graphs/LP-IV/Alle shocks/Quarterly_Instrument.png
+b1075feb49d9c96ffb4cb30c0b65ad7c657bc776 Graphs/LP-IV/Alle shocks/Shock_and_Fitted_Panel.png
+0bbc55c0ab9531d16bf0a605a8843c3c1520f25e Graphs/LP-IV/Cumulative_IRF_Normalized_Styled.png
+dba503203673096bfee39b6076692fbd39a15586 Graphs/LP-IV/Cumulative_IRF_Normalized_Styled.png
+3836b10e316d353d91e71127b325dc926732267e Graphs/LP-IV/IRF.png
+4648742d20bf8f3499a4f0ed1b9e0ecca0a4a536 Graphs/LP-IV/IRF.png
+b4aee535c3a1b5d2a1e9692ded288ff89bb6aafa Graphs/LP-IV/IRF.png
+d64ad1b044c6931a051195616ec6fc5a9e1fd148 Graphs/LP-IV/IRF_Normalized.png
+0b9998f9fbbe13ae547c82a1a9f6274b6215a775 Graphs/LP-IV/IRF_Normalized_Styled_2x2.png
+f42fd751e01a6fc9d9d4b9b4385224c703e6b0fa Graphs/LP-IV/IRF_Normalized_Styled_ImprovedY.png
+975d99296814d7ba91f8bb769caf9c3719b3c304 Graphs/LP-IV/IRF_Normalized_Styled_SimpleY.png
+aa29ba2fb14c7367e668feb14984c46433c9fbdb Graphs/LP-IV/IRF_Normalized_Styled_SimpleY.png
+14f6a8db85f0b2b71b3d0f9d743d1082a46e3cc7 Graphs/LP-IV/IRF_Zullig_kode.png
+4c646f94704ebdea9f5d8acc380fd41bff4d4ebf Graphs/LP-IV/IRF_buildin_func.png
+6bf15fa480af94140b012880ee902ca421a0efc1 Graphs/LP-IV/IRF_cumulative.png
+c533d23d094b0cb2fa07c838850b3b4103e1a1ae Graphs/LP-IV/IRF_cumulative.png
+74c799cdc0e2960ba80039e111052a34d180fbb8 Graphs/LP-IV/IRF_skal_cum.png
+c12c74e786ab01c577a6cb0724131ee9a0e96d7e Graphs/LP-IV/IRF_skaleret.png
+21054926a1fbd322146c34b62171d92725a83f21 Graphs/LP-IV/IRP_alt.png
+523b36b53aba5aa54e4a0df7bb17074eeada4f8a Graphs/LP-IV/IRP_base.png
+5f7069ecb585d4b84c59732ab7c4e27a53fb4a6f Graphs/LP-IV/Kun PureMP
+287090fe4306b50a301daf5ced8d33183a81c8e2 Graphs/LP-IV/Kun PureMP/IRF_buildin_func.png
+989adf4973875b0ea8a4fa35701fd787c1a2e5a7 Graphs/LP-IV/Kun PureMP/IRF_cumulative.png
+e57dc8a6c4e65b87de17deb3766f96dde1594bc4 Graphs/LP-IV/Shock_and_Fitted_Panel.png
+b28bb716e8c4db344dce4fc59c82538614453e23 Graphs/OIS rate changes
+6344ba03d9410993322e5edf311d61701e2736fc Graphs/OIS rate changes/plot_1W.png
+fc292b423776655b762e6a2d239cefb10df29df9 Graphs/OIS rate changes/plot_1Y.png
+76a489e74e9c1b9fb8d5ffc0f8ba4ce2fa1cdd24 Graphs/OIS rate changes/plot_5Y.png
+0b0081bd84ac9c86be5ad3993a0cdf3f52b5414a Graphs/OIS rate changes/plot_all_in_one.png
+2c5d55e77492dd70db2680cb4e62f3483e6d9b67 IV_mpshock_release (1).RData
+b54a61a69e4f07142daab423b231389e74c21c70 Instrumenter
+120ed42e23925476317898409bea377b2d64e51c Instrumenter/.DS_Store
+09f1668d38d155de7d7a4edd7e1dcb93e0ffe926 Instrumenter/InfoCB_Shocks_m.rds
+6296902a23e3864293e1289aff2e0a08dfef2168 Instrumenter/InfoCB_Shocks_q.rds
+386a150ed87f7607d8b1977493028ebc25cad6df Instrumenter/KAWK_shock.rds
+1414b46f139391371b7541e95b2d19963bde1ef5 Instrumenter/PureMP_Shocks_m.rds
+a7652da055e8a1a52d4d08e123ebd1b0d2d9273b Instrumenter/PureMP_Shocks_q.rds
+0a1bb73ef75e27402dedf5eb3a6e2ac0d3d5b5f5 Instrumenter/shock_test.rds
+878564f9f5c11260c0454a01d98831a01d7eb2f5 LP eksempel.R
+32ce7652ae76fbe042e8cdc80095ad072a6b59a7 R kode
+491ab8f1a2879515d0cd93cc23478573aa3c5e6f R kode
+4ce974140b31b4a7dac658540f90af51d82dbb38 R kode
+4f60a69f5c038e954a974f7efffc0f9bb13df566 R kode
+5d130acdaaafdf5a43bdde80b7dc861ba3d703e2 R kode
+6be9d52eb26adbf0dd928b758f79636ab1f667d9 R kode
+747fae434a018285b8e8ca28dec0ccce7fe726df R kode
+d4b376b9180cce163f60014d92a8f133a34dd684 R kode
+f4f9797e2346181ff248280a8cc5ccbbd3da0876 R kode
+224016317b93bf7e8da4050c8f3bb69da39a6125 R kode/.DS_Store
+cd25f418a0f3262343b945901449a222272b60a2 R kode/.DS_Store
+fdb12dbcaffff3d8e2d667f48c7fb6f3ce82a6c8 R kode/.DS_Store
+174f7219cb2f34ce56653fc5103f022d21fbcf85 R kode/1) Control Data Preperation
+27c8720dff59fcf9cc11d03f33147fd1a79ccf73 R kode/1) Control Data Preperation
+bc61cae301aca6f544a19c8911c7cef81e1ebe10 R kode/1) Control Data Preperation
+308d4185d9dfe311be4af94fd547e44fa474b6b7 R kode/1) Control Data Preperation/1) Construct Raw data.R
+c8beacc31cda212a926242b730b008b15ea5f948 R kode/1) Control Data Preperation/1) Construct Raw data.R
+d30175166031876f328e09b23332f4a8c95f88b2 R kode/1) Control Data Preperation/1) Construct Raw data.R
+8285805d38221062f4fa9bf21b10b3ce91d554da R kode/1) Control Data Preperation/2) Interpolate control var to monthly data.R
+bc1ef7b34d81b7b9603ebcc2c2b8bfcdab894e48 R kode/1) Control Data Preperation/2) Interpolate control var to monthly data.R
+2ac0e6d2f4d7d317a31a4158690c75b4d9b81032 R kode/2) Identify MP shock
+54d567756e33b2bd0a347bfc7e10b57682cb499f R kode/2) Identify MP shock
+90170870df814f930f5a6d53959b947f42ca8288 R kode/2) Identify MP shock
+baa15b6649fd7b69bfe78ad19de9ac116723c913 R kode/2) Identify MP shock
+9a9d7b5305582b9a4bfc592745b94b1ce0f88b09 R kode/2) Identify MP shock/.DS_Store
+15d84766ffc66b0771ffa814fa85a2a0b7ac8dcd R kode/2) Identify MP shock/Target Factor, Path and QE shocks.R
+36362672737885949958de86db003c6975030529 R kode/2) Identify MP shock/Target Factor, Path and QE shocks.R
+2cd2d4375ad948591f98089319f3cf8fcf6b5bda R kode/2) Identify MP shock/Target factor.R
+772d8e2193bfa5020eb5aa92b1ca6abb6de45432 R kode/2) Identify MP shock/Target factor.R
+db056aeca133429bac30a9b34fe6ab513866ebba R kode/2) Identify MP shock/Target factor.R
+374264673a586bf8e1c79afddfccc062aa3c873d R kode/3) LP-IV
+44b68312ba1f7ff303d6e90e5a8c331d731f2607 R kode/3) LP-IV
+6a86c38ada1df3d639f15b297182b4e2e51af221 R kode/3) LP-IV
+73f44bf61cd11bb782de0c43c47bf01e7674b29e R kode/3) LP-IV
+832221f7e1e6d0330962f78473457ed51ef67bc9 R kode/3) LP-IV
+89ee6b9f864e23f134faffd93c61b65055e6c1ef R kode/3) LP-IV
+b6c3609adb9efa9e2b5ba5d8a91aa132631bb0df R kode/3) LP-IV
+d594db1ec6eaf55629c493e21c27fc2f121b16e1 R kode/3) LP-IV
+077abcf9ce41fd51efac64b7d0427f53920aac60 R kode/3) LP-IV/.DS_Store
+8b2ec0d1ddbf09c6ab8b7007d3fc25e76d5d51fe R kode/3) LP-IV/.DS_Store
+c61afd8c15aba0c66497a3c6320cbc8d7d796703 R kode/3) LP-IV/.DS_Store
+f7efd956e4f79a9125bf60e6274e5ad4375bcae0 R kode/3) LP-IV/.DS_Store
+75b344018731babd6ebc0d3771ae2e7c4647ace3 R kode/3) LP-IV/1) 1.Stage.R
+ac9e6c390b79c60856df1a9633f94edf5d4c0546 R kode/3) LP-IV/1) 1.Stage.R
+302b46f22f96f8b5b2a66dbcd75dc39692a25488 R kode/3) LP-IV/2) Prepare data for LP-IV.R
+8818e626fbcffac526a6b96acb76c432e29b054d R kode/3) LP-IV/2) Prepare data for LP-IV.R
+eaef21b2fc0f464b82d17192cf3fdd44b9db565a R kode/3) LP-IV/2) Prepare data for LP-IV.R
+a26c2794bac9485810019e39b6efee74ed355ecc R kode/3) LP-IV/3) LP-IV.R
+1322b2db0901c3ee91ab7fe4ecef55dc5039daee R kode/3) LP-IV/3.1) LP-IV manually.R
+8eeca5ec909fd27e45f80b6a382d16bf1fedb54e R kode/3) LP-IV/3.1) LP-IV manually.R
+5dc36d748265bf66e2d2becbcf9d449d309c3fab R kode/3) LP-IV/All 3 shocks LP-IV
+f02e777807458fec8bdccc9971313fd82e0e58d1 R kode/3) LP-IV/All 3 shocks LP-IV
+dcfcb4714347b268828eaf369fae994b21351c33 R kode/3) LP-IV/All 3 shocks LP-IV/1 Stage.R
+cf4d99cc2264d233049e03820e5bc3c8c669e89d R kode/3) LP-IV/All 3 shocks LP-IV/2) Prepare data for LP-IV.R
+98d6a75a0244dd9e65ae311bb00918689ccb1c68 R kode/3) LP-IV/All 3 shocks LP-IV/LP-IV.R
+998b45141cd4444a253fce08ec07a03c3379f2db R kode/3) LP-IV/Alle 3 stød
+6bcbeb9d558390763f17eae72c401cb625861dbd R kode/3) LP-IV/Alle 3 stød/1 Stage.R
+37b24c829006e53da39cb6efb0ce7efd1fa9b309 R kode/3) LP-IV/Alle 3 stød/2) Prepare data for LP-IV.R
+a89b9a1f121e4acf72dad7796f93157decbe58ae R kode/3) LP-IV/Alle 3 stød/LP-IV.R
+d14e4ba8a8c6c81e2bab3bb5d4565f142a7f19ac R kode/3) LP-IV/Andet:ekstra filer
+9663f65c00998de62c272d79f13ed56edb970b60 R kode/3) LP-IV/Andet:ekstra filer/LP-IV med skalering.R
+41cb144300ed187cd5e3a6b4db23fefa7c13ffbe R kode/3) LP-IV/Gamle filer
+a64d9b9e7818f9ac829cf528a3a373f046f89a7e R kode/3) LP-IV/Gamle filer
+d599864f2e4943f35865eb3974882b00dca65125 R kode/3) LP-IV/Gamle filer/1) 1 Stage regression.R
+2efa060af27488d2d4ceacd2d2a3576871ae7218 R kode/3) LP-IV/Gamle filer/2) LP-IV.R
+fea7372a0422b4ea8908cde1a19ef18d1a301783 R kode/3) LP-IV/Gamle filer/LP IV function.R
+e2ada1bf7f6e6023ef2862909e1701d222a54fb8 R kode/3) LP-IV/Pure MP stød
+5035e39c87aa433c08a6b3765967e72e69308772 R kode/3) LP-IV/Pure MP stød/1) 1.Stage.R
+f682512d4e3bed21bd316dc1a827589b19b3541f R kode/3) LP-IV/Pure MP stød/2) Prepare data for LP-IV.R
+3b05877d3783b373b3a2745d32adfad9ff6511aa R kode/3) LP-IV/Pure MP stød/3.1) LP-IV manually.R
+3bf809f395cca797bda64f55fd9e0f02a23fa665 R kode/3) LP-IV/Pure MP stød/4) LP-IV for each country.R
+2173841e2fce11f6ee45bddc8156d52b6ccd2b29 R kode/3) LP-IV/Pure MP stød/LP-IV.R
+774a4122b9de4572111b3aa906c6392b937bee85 R kode/4) Panel LP-IV
+20d09ede25abe768f5e2339fc9e41a49ff440f89 R kode/4) Panel LP-IV/Metode 2.R
+ad759061241bfdf6fa273993fa33a08fff96c2c5 R kode/4) Panel LP-IV/Panel LP-IV function.R
+82b55269ff0f90be541c69949bdd59620d083912 R kode/4) Panel LP-IV/Panel LP-IV.R
+9568dd32fe0dceb72f82a1a2830f420a84b293fa R kode/Functions
+a89098989fccb1f70f11111657cf7290294ac99a R kode/Functions
+0f64308de729daa0abc1d4f0232bbbd93e05a85b R kode/Functions/Functions.R
+1354c0d56e1a0be08ec7524033924f91af8ba4a5 R kode/Functions/Functions.R
+c198e71647b7f568007e88739458918f25b14fbd R kode/Functions/LP IV function.R
+e5566e900cfa96292c268bfe10bdb8e509ef6173 R kode/Functions/Load_Packages.R
+21e99e757f593f053721014d503b88b6d1fa6cc8 R kode/Plotting
+f0926452e62a0c445c481bd63563a91b1247fc35 R kode/Plotting/Make EU maps.R
+54db0230543f917429bbc1ea1b74ca0e6eac8455 R kode/Plotting/OIS change plots.R
+408b3fd3c9ecf5361176f5f8c38146109bcd2eaa Seminar Functions.R
+354ef029a13550ff5573ef37d35962afd698b5ed Shocks
+4c35a23038781d2aafda9947989cddb2ba1747da Shocks
+9850dda16b46a1492268df1f27fd221a9e83cee1 Shocks/Information Shock.rds
+49bd89f4da91b64a830cbdca522b57a6a52dc24f Shocks/Information Shock_Quarterly.rds
+fba9634c769468aa053c78801be14239f6f0574a Shocks/Target Factor Shock.rds
+4954d65806d2ffe4c289a024ae3209fdda7dc930 Shocks/Target Factor Shock_Quarterly.rds
+3d44a1e8299f3ef285b9030331be519d15a61d35 Tamas filer
+f7b1b50b31caf7f779e241209145effc4e0a5aa5 Tamas filer
+8a750072520d5482ed862a21db12532b0df2a087 Tamas filer/Estimating_MPshocks.R
+22cac8e698e4ba01869af376fe9b9372518c8d20 Tamas filer/Load_all_raw_data.R
+b73d19485c39ea8e53192e52657b88cce38ccceb Tamas filer/Load_all_raw_data.R
+da57a2d4ae4ca62c88d83c007a706b1c4ca35a32 Tamas filer/interpolate.R
+628995eeab71650acedf159f7bd009a659871d59 Tamas filer/load_Packages.R
+3b71128925d1f22a3bd3d8ea4356f3e45b1bfeed Writing
+74b435d8ef7575700c319116522df9e001421b82 Writing/.DS_Store
+241ad8e449a2ccb887060e21c604912534af6829 Writing/Commitment paper
+b475742345470c17d2c52cc7d9119ff4449f7a18 Writing/Commitment paper/Commitment paper.pdf
+fb57ee1918b84d6fc487d885292a7fa44fddb5f9 Writing/Commitment paper/Description of Seminar.pdf
+33c7f61bfe8ad14cdc9992c4c0f76f744e0818ad Writing/Commitment paper/Dokument til Bergman.lyx
+d54b0324ae0abcceea18ef07b73f616b0118a2ad Writing/Commitment paper/Dokument til Bergman.lyx~
+83711efe1743ea5490b178ac94a2c8b103fc0830 Writing/Noter
+e97bc21aea5e9f52ebc7695493fcc6994b8059e9 Writing/Noter/Papers in Local Projections.lyx
+f17117458430e5c3ca8f4de34c80cc3d97e5a0ad Writing/Noter/Papers in Local Projections.lyx~
+2bbd54dc2d3324f31379273c92caf8a640befc54 Writing/Papers in Local Projection
+d10ad243cfbce766f6e522a91e5a302c8c40d658 Writing/Papers in Local Projection/Local Projection - Oscar Jorda & Alan M Taylor.lyx
+1a57d3e3c6a48e5659c8b5ba2840ccb44f585309 Writing/Papers in Local Projection/Local Projection - Oscar Jorda & Alan M Taylor.lyx~

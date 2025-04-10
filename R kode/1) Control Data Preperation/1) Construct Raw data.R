@@ -1,14 +1,16 @@
+# Clear workspace and console
 rm(list = ls())
 cat("\014")
 
-# Set working directory (adjust as needed)
+# Set working directory based on system user
 user <- Sys.info()[["user"]]
+
 if (user == "OscarEAM") {
-  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Økonomi - Kandidat/Heterogenous-spillover-ECB/")
-} else if (user == "B362561") {
-  setwd("C:/Users/B362561/Desktop/OscarErnst-Heterogenous-spillover-ECB-3")
-} else if (user == "Kasper") {
-  setwd("HER_INDSÆT_STI_FOR_KASPER")
+  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB")
+} else if (user == "Oscar_dream") {
+  setwd("HER_INDSÆT_STI_FOR_OSCAR_DREAM")
+} else if (user == "kasper") {
+  setwd("/Users/kasper/Documents/GitHub/OscarErnst-Heterogenous-spillover-ECB")
 } else {
   stop("Ukendt bruger – tilføj sti for denne bruger.")
 }
@@ -25,7 +27,7 @@ library(eurostat)
 countries <- c("EA20", "AT", "BE", "CY", "EE", "FI", "FR", "DE", "EL", "IE", 
                "IT", "LV", "LT", "LU", "MT", "NL", "PT", "SK", "SI", "ES", "DK")
 start_year <- 2000
-end_year <- 2019
+end_year <- 2020
 
 
 # Load required packages with error handling
@@ -69,13 +71,17 @@ d <- d %>% rename(
 # 5) Final dataset: keep yoy changes + newly created log-level columns
 #    plus some original columns
 d1 <- d %>%
-  select(
-    country, year, quarter,
-    # yoy changes
-    d_HICP, d_rGDP, d_Consumption,
-    # log-level columns
-    HICP_log, rGDP_log, Consumption_log
-  )
+  # Add a new Date column corresponding to the first day of the quarter at midnight.
+  dplyr::mutate(Date = as.POSIXct(sprintf("%04d-%02d-01 00:00:00", year, (quarter - 1) * 3 + 1),
+                           format = "%Y-%m-%d %H:%M:%S")) %>% 
+  dplyr::select(
+    Date, country,
+               # yoy changes
+               d_HICP, d_rGDP, d_Consumption,
+               # log-level columns
+               HICP_log, rGDP_log, Consumption_log
+             )
+
 
 # 6) Save the constructed control variables dataset
 saveRDS(d1, file = file.path("Data", "Control Variables", "Eurozone_country_variables.rds"))

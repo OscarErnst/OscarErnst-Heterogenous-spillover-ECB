@@ -19,7 +19,8 @@ if (user == "OscarEAM") {
   stop("Ukendt bruger – tilføj sti for denne bruger.")
 }
 
-data   <- readRDS("Data/LP-IV/Kun PureMP/input_data.rds")
+data   <- readRDS("Data/LP-IV/Kun PureMP/input_data.rds") %>% filter(country == "EA20") %>% 
+  dplyr::select(-country)
 PureMP <- readRDS("Data/LP-IV/Kun PureMP/Bund_instrument.rds")
 
 # Define outcome variables (unchanged)
