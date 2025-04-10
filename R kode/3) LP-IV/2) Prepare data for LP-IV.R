@@ -24,6 +24,8 @@ library(dplyr)
 library(lubridate)
 library(readxl)
 
+size_of_bund <- "2Y"
+
 #########################################################################
 # 1. Load Endogenous Variables (Controls and Outcomes)
 #########################################################################
@@ -32,17 +34,17 @@ control <- readRDS(file.path("Data", "Control Variables", "Eurozone_country_vari
   dplyr::select(-country) %>%
   #filter(!(year == 2005 & quarter %in% c(1, 2)))
   filter(year > 2005) %>% 
-  dplyr::select(d_rGDP, d_HICP, d_Consumption)
+  dplyr::select(d_HICP, d_rGDP, d_Consumption, HICP_log, rGDP_log, Consumption_log)
 
 #########################################################################
 # 2. Load and Aggregate Bund Yield Data to Quarterly Averages
 #########################################################################
 bund_yield <- read_excel(file.path("Data", "Generic Bundesbank yield.xlsx")) %>%
-  dplyr::select(Date, `6M`) %>%
+  dplyr::select(Date, size_of_bund) %>% 
   mutate(Date = as.Date(Date),
          Quarter = floor_date(Date, unit = "quarter")) %>%
   group_by(Quarter) %>%
-  summarise(bund_yield = mean(`6M`, na.rm = TRUE), .groups = "drop") %>%
+  summarise(bund_yield = mean(.data[[size_of_bund]], na.rm = TRUE), .groups = "drop") %>%
   filter(Quarter >= as.Date("2006-01-01") & Quarter <= as.Date("2019-12-31"))
 
 #########################################################################
@@ -57,7 +59,7 @@ rm(bund_yield, control)
 target_q <- readRDS(file.path("Data", "LP-IV", "Target_instrument.rds"))
 
 # Restrict target_q to the same window as the other data
-target_q <- window(target_q, start = c(2005, 3), end = c(2019, 4))
+#target_q <- window(target_q, start = c(2005, 3), end = c(2019, 4))
 
 # Ensure it matches the number of rows in 'data'
 target_q <- as.numeric(target_q[1:nrow(data)])

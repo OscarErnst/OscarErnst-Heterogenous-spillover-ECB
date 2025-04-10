@@ -3,7 +3,6 @@ rm(list = ls())
 cat("\014")
 
 # Set working directory
-setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Økonomi - Kandidat/Heterogenous-spillover-ECB")
 
 # Load required functions and packages
 source("R kode/Functions/Load_Packages.R")

@@ -28,11 +28,11 @@ data <- readRDS(file.path("Data", "LP-IV", "input_data.rds"))
 bund_hat <- readRDS(file.path("Data", "LP-IV", "instrument.rds"))
 
 # --- Settings ---
-outcome_vars <- c("d_rGDP", "d_HICP", "d_Consumption", "bund_yield")
-controls <- c("d_rGDP", "d_HICP", "d_Consumption", "bund_yield")
+outcome_vars <- c("d_rGDP", "d_HICP", "bund_yield")
+controls <- c("d_rGDP", "d_HICP", "bund_yield")
 shock_var <- "bund_yield"
-p <- 7     # number of lags
-H <- 12    # horizon
+p <- 3     # number of lags
+H <- 8    # horizon
 shocksize <- 1  # 1 pp increase
 
 # --- Lag Function ---
