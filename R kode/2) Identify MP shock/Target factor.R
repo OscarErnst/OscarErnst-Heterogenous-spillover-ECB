@@ -1,7 +1,3 @@
-#########################################################################
-# Cleaned-Up Code for Identifying and Aggregating Pure Target Shocks
-#########################################################################
-
 # Clear workspace and console
 rm(list = ls())
 cat("\014")
@@ -11,8 +7,8 @@ user <- Sys.info()[["user"]]
 
 if (user == "OscarEAM") {
   setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB")
-} else if (user == "Oscar_dream") {
-  setwd("HER_INDSÆT_STI_FOR_OSCAR_DREAM")
+} else if (user == "B362561") {
+  setwd("C:/Users/B362561/Desktop/OscarErnst-Heterogenous-spillover-ECB-3")
 } else if (user == "kasper") {
   setwd("/Users/kasper/Documents/GitHub/OscarErnst-Heterogenous-spillover-ECB")
 } else {
@@ -96,7 +92,7 @@ instrument <- monthly_target %>%
   arrange(month) %>%
   mutate(target = target - lag(target, 1))
 
-saveRDS(instrument, file = file.path(getwd(), "Instrumenter", "KAWK_shock.rds"))
+saveRDS(instrument, file = file.path(getwd(), "Instrumenter", "Pure MP", "KAWK_shock.rds"))
 
 ################################################################################
 # -----------------------------
@@ -184,17 +180,17 @@ monthly_summary <- merged_data %>%
 
 # Make separate data frames for pureMP & InfoCB
 data_monthly_pureMP <- monthly_summary %>%
-  select(Date, target = diff_pureMP)
+  dplyr::select(Date, target = diff_pureMP)
 
 data_monthly_InfoCB <- monthly_summary %>%
-  select(Date, target = diff_InfoCB)
+  dplyr::select(Date, target = diff_InfoCB)
 
 # Create the output directory if it doesn't exist
 if (!dir.exists("Instrumenter")) dir.create("Instrumenter")
 
 # Save the monthly results data frame (pureMP + InfoCB separately)
-saveRDS(data_monthly_pureMP, file = file.path("Instrumenter", "PureMP_Shocks_m.rds"))
-saveRDS(data_monthly_InfoCB, file = file.path("Instrumenter", "InfoCB_Shocks_m.rds"))
+saveRDS(data_monthly_pureMP, file = file.path("Instrumenter", "Pure MP", "PureMP_Shocks_m.rds"))
+saveRDS(data_monthly_InfoCB, file = file.path("Instrumenter", "Pure MP", "InfoCB_Shocks_m.rds"))
 
 # -----------------------------
 # Quarterly Aggregation
@@ -217,7 +213,7 @@ data_quarterly_pureMP <- data_monthly_pureMP %>%
       format = "%Y-%m-%d %H:%M:%S"
     )
   ) %>%
-  select(Date, target)
+  dplyr::select(Date, target)
 
 data_quarterly_InfoCB <- data_monthly_InfoCB %>%
   mutate(
@@ -236,9 +232,9 @@ data_quarterly_InfoCB <- data_monthly_InfoCB %>%
       format = "%Y-%m-%d %H:%M:%S"
     )
   ) %>%
-  select(Date, target)
+  dplyr::select(Date, target)
 
 # Save the quarterly results (pureMP + InfoCB separately)
-saveRDS(data_quarterly_pureMP, file = file.path("Instrumenter", "PureMP_Shocks_q.rds"))
-saveRDS(data_quarterly_InfoCB, file = file.path("Instrumenter", "InfoCB_Shocks_q.rds"))
+saveRDS(data_quarterly_pureMP, file = file.path("Instrumenter", "Pure MP", "PureMP_Shocks_q.rds"))
+saveRDS(data_quarterly_InfoCB, file = file.path("Instrumenter", "Pure MP", "InfoCB_Shocks_q.rds"))
 

@@ -26,6 +26,14 @@ library(tidyr)
 library(purrr)
 library(lubridate)
 library(zoo)
+library(MASS)
+library(NlcOptim)
+library(dplyr)
+library(data.table)
+library(purrr)
+library(tidyr)
+library(stringr)
+library(xtable)
 library(readxl)
 library(stargazer)
 library(data.table)
@@ -681,10 +689,10 @@ all_shocks$Date <- as.Date(sprintf("%04d-%02d-01",
 all_shocks <- all_shocks[, c("Date", "year", "month", "pureMP_m", "Path_m", "QE_m")]
 
 # 3) (Optional) If you don’t need separate year/month columns anymore, drop them:
-all_shocks <- all_shocks[, c("Date", "pureMP_m", "Path_m", "QE_m")]
+all_shocks <- all_shocks[, c("Date", "pureMP_m", "Path_m")]
 
 # 4) Save to RDS
-saveRDS(all_shocks, file = "Instrumenter/PURE MP, Path & QE/all_3_shocks.rds")
+saveRDS(all_shocks, file = "Instrumenter/Pure MP & Path/PureMP&Path.rds")
 
 # Check the result
 head(all_shocks)
