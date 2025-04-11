@@ -1,9 +1,4 @@
 
-
-
-# ─────────────────────────────────────────────────────────────────────────
-# 1. Working directory and data load (same as before)
-# ─────────────────────────────────────────────────────────────────────────
 # Clear workspace and console
 rm(list = ls())
 cat("\014")
@@ -29,24 +24,21 @@ if (user == "OscarEAM") {
 #      - d_rGDP     (your outcome of interest)
 #      - bund_yield (a control or second outcome)
 #      - Possibly others (HICP, consumption, etc.)
-full_data <- readRDS("Data/LP-IV/Kun PureMP/input_data.rds")
+full_data <- readRDS("Data/LP-IV/PureMP/input_data.rds")
 
 #    Load shock data that has the same or overlapping Date range:
-shock_all <- readRDS("Data/LP-IV/Kun PureMP/PureMP_shock.rds")
+shock_all <- readRDS("Data/LP-IV/PureMP/shock.rds")
 # 'shock_all' should have columns:
 #   - Date     (matching the same quarterly dates)
 #   - target_q (the shock we want to use in the IV)
 
 # 3a) Merge the shock with the main dataset by Date
 #     After merging, each row in 'merged_data' has the relevant shock value.
-merged_data <- full_data %>%
-  left_join(shock_all, by = "Date")
+
 
 # 4) Define the set of countries
 countries <- c("AT", "BE", "CY", "DE", "DK", "EA20", "EE", "EL", "ES", "FI",
                "FR", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PT", "SI", "SK")
-# If you only want to run for "EA20", uncomment below:
-countries <- "EA20"
 
 # 5) Create a lookup for nicer country names (optional)
 country_names <- c(
@@ -84,10 +76,10 @@ get_country_label <- function(code) {
 # 6) Specify outcome variables for the model
 #    We'll assume you want "d_rGDP" as your main outcome
 #    and "bund_yield" as a second variable in the local projections.
-outcome_vars <- c("d_rGDP", "bund_yield")
+outcome_vars <- c("d_rGDP", "d_HICP", "bund_yield")
 
 # 7) Open a PNG device for multi-panel plots (21 countries -> 7 rows x 3 columns)
-png("Graphs/LP-IV/AllCountries_rGDP.png", width = 3200, height = 4200, res = 300)
+png("Graphs/LP-IV/PureMP/Impulse Responses/AllCountries_rGDP.png", width = 3200, height = 4200, res = 300)
 par(mfrow = c(7, 3),
     mar = c(4, 4, 2, 1),
     cex.axis = 0.8,
@@ -102,7 +94,7 @@ burgundy_trans <- rgb(118/255, 0, 32/255, alpha = 0.3)
 for (ctry in countries) {
   
   # --- (a) Subset merged_data to this country
-  df_ctry <- merged_data %>%
+  df_ctry <- full_data %>%
     filter(country == ctry)
   
   # Check if we got any rows
@@ -113,7 +105,7 @@ for (ctry in countries) {
   
   # Rename 'target_q' to 'shock' for convenience, and select relevant columns
   df_ctry <- df_ctry %>%
-    dplyr::select(all_of(outcome_vars), shock = target_q)
+    dplyr::select(all_of(outcome_vars))
   
   # Omit rows with NA in the columns of interest
   tmp <- na.omit(df_ctry)
@@ -126,7 +118,7 @@ for (ctry in countries) {
   
   # Create the endogenous data matrix (Y) and the shock series
   Y     <- tmp[, outcome_vars, drop = FALSE]
-  shock <- tmp[, "shock", drop = FALSE]
+  shock <- shock_all %>% dplyr::select(shock)
   
   # --- (b) Run LP-IV within a tryCatch to handle any internal errors
   lpiv_res <- tryCatch(
@@ -137,8 +129,6 @@ for (ctry in countries) {
       trend          = 0,
       confint        = 1.96,    # ~95% CI
       use_nw         = TRUE,
-      lags_criterion = "AIC",
-      max_lags       = 9,
       hor            = 8
     ),
     error = function(e) e  # return the error object on failure
@@ -217,4 +207,6 @@ for (ctry in countries) {
 }
 # 9) Close the PNG device
 dev.off()
+
+
 

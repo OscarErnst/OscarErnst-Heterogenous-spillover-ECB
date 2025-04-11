@@ -17,8 +17,9 @@ if (user == "OscarEAM") {
 
 
 library(lpirfs)
+country = "DE"
 
-data   <- readRDS("Data/LP-IV/PureMP/input_data.rds") %>% filter(country == "EA20") %>% 
+data   <- readRDS("Data/LP-IV/PureMP/input_data.rds") %>% filter(country == country) %>% 
   dplyr::select(-country)
 shock <- readRDS("Data/LP-IV/PureMP/PureMP_shock.rds")
 
@@ -114,7 +115,7 @@ plot_level_irfs <- function(lpiv_res, outcome_vars, file_name) {
 plot_level_irfs(
   lpiv_res        = lpiv_res,
   outcome_vars    = outcome_vars,
-  file_name       = "Graphs/LP-IV/PureMP/Impulse Responses/IRF_EA20.png"
+  file_name       = paste0("Graphs/LP-IV/PureMP/Impulse Responses/IRF_",country,".png"
 )
 
 # ─────────────────────────────────────────────────────────────────────────
