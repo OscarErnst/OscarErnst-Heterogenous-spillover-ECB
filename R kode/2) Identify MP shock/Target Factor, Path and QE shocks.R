@@ -31,6 +31,9 @@ library(stargazer)
 library(data.table)
 library(broom)
 library(sandwich)
+library(MASS)
+library(tidyverse)
+library(NlcOptim)
 
 #Name variables to be used in data
 HFI_variables <- c("date","OIS_1M", "OIS_3M", "OIS_6M", "OIS_1Y", "OIS_2Y", "OIS_5Y", "OIS_10Y")
@@ -462,6 +465,46 @@ abline(v = 0) # vertical line
 points(shocks[,1][shocks[,1] > 0 & stockm > 0], stockm[shocks[,1] > 0 & stockm > 0], col = "blue") # Blue if both x and y are positive
 points(shocks[,1][shocks[,1] < 0 & stockm < 0], stockm[shocks[,1] < 0 & stockm < 0], col = "blue") # Blue if both x and y are negative
 legend("topright", legend = c("Information shock", "Monetary policy shock"), pch = 19, col = c("blue", "black"), cex = 0.8)
+
+# Define file path for the output image.
+output_file <- "/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB/Graphs/Identify MP shock/MP_shock.png"
+
+# Open the PNG device with your desired resolution and dimensions.
+png(filename = output_file, width = 2000, height = 2400, res = 300)
+
+# Extract the data for plotting.
+stockm <- FinVar$STOXX50
+
+# Create the basic scatter plot with custom point size and labels.
+plot(shocks[,1], stockm,
+     pch = 19,
+     cex = 1.5,
+     xlab = "Pure Monetary Policy",
+     ylab = "Change in STOXX50 (%)")
+
+# Add horizontal and vertical reference lines at 0.
+abline(h = 0, col = "gray", lty = 2)
+abline(v = 0, col = "gray", lty = 2)
+
+# Overplot points in blue for cases where both shock and stockm are positive
+# and where both are negative.
+points(shocks[,1][shocks[,1] > 0 & stockm > 0],
+       stockm[shocks[,1] > 0 & stockm > 0],
+       col = "blue", pch = 19, cex = 1.5)
+points(shocks[,1][shocks[,1] < 0 & stockm < 0],
+       stockm[shocks[,1] < 0 & stockm < 0],
+       col = "blue", pch = 19, cex = 1.5)
+
+# Add a legend indicating the shock types.
+legend("bottomleft",
+       legend = c("Information shock", "Monetary policy shock"),
+       pch = 19,
+       col = c("blue", "black"),
+       cex = 0.8)
+
+# Close the device to write the file.
+dev.off()
+
 
 if (window == "release" || window == "monetary event") {
   

@@ -18,7 +18,7 @@ if (user == "OscarEAM") {
 
 library(lpirfs)
 
-data   <- readRDS("Data/LP-IV/PureMP & Path/input_data.rds") %>% filter(country == "EA20") %>% 
+data   <- readRDS("Data/LP-IV/PureMP & Path/input_data.rds") %>% filter(country == "DE") %>% 
   dplyr::select(-country)
 shock <- readRDS("Data/LP-IV/PureMP & Path/shock.rds")
 

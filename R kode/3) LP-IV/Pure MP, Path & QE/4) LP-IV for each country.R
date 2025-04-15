@@ -37,8 +37,12 @@ shock_all <- readRDS("Data/LP-IV/PureMP, Path & QE/shock.rds")
 
 
 # 4) Define the set of countries
-countries <- c("AT", "BE", "CY", "DE", "DK", "EA20", "EE", "EL", "ES", "FI",
-               "FR", "IE", "IT", "LT", "LU", "LV", "MT", "NL", "PT", "SI", "SK")
+countries <- c(
+  "AT", "BE", "CY", "DK", "EE", "EA20", "FI", "FR", "DE", 
+  "EL", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PT", 
+  "SK", "SI", "ES"
+)
+
 
 # 5) Create a lookup for nicer country names (optional)
 country_names <- c(

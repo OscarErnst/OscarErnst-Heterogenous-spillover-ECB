@@ -115,7 +115,7 @@ plot_level_irfs <- function(lpiv_res, outcome_vars, file_name) {
 plot_level_irfs(
   lpiv_res        = lpiv_res,
   outcome_vars    = outcome_vars,
-  file_name       = paste0("Graphs/LP-IV/PureMP/Impulse Responses/IRF_",country,".png"
+  file_name       = paste0("Graphs/LP-IV/PureMP/Impulse Responses/IRF_",country,".png")
 )
 
 # ─────────────────────────────────────────────────────────────────────────
