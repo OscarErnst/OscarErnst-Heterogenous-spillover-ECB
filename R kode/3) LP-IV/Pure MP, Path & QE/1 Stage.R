@@ -67,6 +67,7 @@ control <- load_data(
   filter(year(Date) >= start_month[1], year(Date) <= end_month[1])
 
 d_rGDP_m <- create_ts(control, "d_rGDP_m", start_date, end_date)
+
 d_HICP_m <- create_ts(control, "d_HICP_m", start_date, end_date)
 
 # Henter nu bundesbank data
@@ -103,7 +104,7 @@ shocks_ts <- ts(shocks_data, start = start_month, frequency = 12)
 FirstStage <- dynlm(
   Bund_2Y_m ~ pureMP_m + Path_m + QE_m +
     L(pureMP_m, 1:12) + L(Path_m, 1:12) + L(QE_m, 1:12) +
-    L(Bund_2Y_m, 1:1) + L(d_rGDP_m, 1:12) + L(d_HICP_m, 1:12),
+    L(Bund_2Y_m, 1:12) + L(d_rGDP_m, 1:12) + L(d_HICP_m, 1:12),
   data = shocks_ts
 )
 
@@ -114,7 +115,7 @@ print(summary(FirstStage))
 #    Tester om koefficienterne for de to instrumenter = 0
 joint_test <- linearHypothesis(
   FirstStage,
-  c("pureMP_m = 0", "Path_m = 0")
+  c("pureMP_m = 0", "Path_m = 0", "QE_m = 0")
 )
 
 cat("\nJoint F-test Results (pureMP_m & Path_m = 0):\n")
