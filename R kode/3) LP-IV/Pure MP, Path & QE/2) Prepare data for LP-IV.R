@@ -27,7 +27,7 @@ size_of_bund <- "2Y"
 #########################################################################
 control <- readRDS(file.path("Data", "Control Variables", "Eurozone_country_variables.rds"))%>%
   filter(year(Date) > 2005) %>% 
-  dplyr::select(Date, country, d_HICP, d_rGDP, d_Consumption, HICP_log, rGDP_log, Consumption_log)
+  dplyr::select(country,Date, d_HICP, d_rGDP, d_Consumption, HICP_log, rGDP_log, Consumption_log)
 
 #########################################################################
 # 2. Load and Aggregate Bund Yield Data to Quarterly Averages
