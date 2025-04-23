@@ -24,7 +24,7 @@ run_panel_tMat <- function(outcome) {
     cumul_mult     = FALSE,
     shock          = "shock",
     panel_model    = "pooling",
-    panel_effect   = "time",
+    panel_effect   = "individual",
     robust_cov     = "vcovSCC",
     c_exog_data    = interaction_vars,
     l_exog_data    = outcome,

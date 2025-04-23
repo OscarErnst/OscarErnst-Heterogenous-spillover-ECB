@@ -69,7 +69,7 @@ plot_all_countries <- function(var, out_file) {
       trend          = 0,
       confint        = 1.96,
       use_nw         = TRUE,
-      hor            = 11
+      hor            = 13
     )
     
     # Normalize so Bund-yield(0) = 1
