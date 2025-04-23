@@ -1,10 +1,23 @@
 # Clear workspace and console
-rm(list = ls())
-cat("\014")
+rm(list = ls()); cat("\014")
 
-# Set working directory based on system user
+# -------------------------------------------------------------------------
+# 0. User settings: sampling window & working dir
+# -------------------------------------------------------------------------
+# specify your start/end in year & quarter
+start_year    <- 2006
+start_quarter <- 1
+end_year      <- 2019
+end_quarter   <- 4
+
+# derive actual Date‑objects for filtering
+# quarters start in Jan, Apr, Jul, Oct → months = 1,4,7,10
+q2month <- function(q) (q - 1) * 3 + 1
+start_date <- as.Date(sprintf("%04d-%02d-01", start_year,    q2month(start_quarter)))
+end_date   <- as.Date(sprintf("%04d-%02d-01", end_year,      q2month(end_quarter)))
+
+# working directory
 user <- Sys.info()[["user"]]
-
 if (user == "OscarEAM") {
   setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB")
 } else if (user == "B362561") {
@@ -15,65 +28,74 @@ if (user == "OscarEAM") {
   stop("Ukendt bruger – tilføj sti for denne bruger.")
 }
 
-# --- Load required packages --------------------------------------------
+# -------------------------------------------------------------------------
+# 1. Load packages
+# -------------------------------------------------------------------------
 library(dplyr)
 library(lubridate)
 library(readxl)
 
+# -------------------------------------------------------------------------
+# 2. Load Controls (quarterly panel)
+# -------------------------------------------------------------------------
+control <- readRDS(file.path("Data", "Control Variables", "Eurozone_country_variables.rds")) %>%
+  # keep only our sample window
+  filter(Date >= start_date, Date <= end_date) %>%
+  select(country, Date, d_HICP, d_rGDP, d_Consumption,
+         HICP_log, rGDP_log, Consumption_log)
+
+# -------------------------------------------------------------------------
+# 3. Load & aggregate Bund yield to quarter
+# -------------------------------------------------------------------------
 size_of_bund <- "2Y"
-
-#########################################################################
-# 1. Load Endogenous Variables (Controls and Outcomes)
-#########################################################################
-control <- readRDS(file.path("Data", "Control Variables", "Eurozone_country_variables.rds"))%>%
-  filter(year(Date) > 2005) %>% 
-  dplyr::select(country,Date, d_HICP, d_rGDP, d_Consumption, HICP_log, rGDP_log, Consumption_log)
-
-#########################################################################
-# 2. Load and Aggregate Bund Yield Data to Quarterly Averages
-#########################################################################
 bund_yield <- read_excel(file.path("Data", "Generic Bundesbank yield.xlsx")) %>%
-  dplyr::select(Date, size_of_bund) %>% 
   mutate(Date = as.Date(Date),
+         # floor all to quarter start
          Date = floor_date(Date, unit = "quarter")) %>%
   group_by(Date) %>%
-  summarise(bund_yield = mean(.data[[size_of_bund]], na.rm = TRUE), .groups = "drop") %>%
-  filter(Date >= as.Date("2006-01-01") & Date <= as.Date("2019-12-31"))
+  summarise(
+    bund_yield = mean(.data[[size_of_bund]], na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  filter(Date >= start_date, Date <= end_date)
 
-#########################################################################
-# 3. Merge Bund Yield with Data
-#########################################################################
+# -------------------------------------------------------------------------
+# 4. Merge controls + Bund
+# -------------------------------------------------------------------------
 data <- left_join(control, bund_yield, by = "Date")
-rm(bund_yield, control)
+rm(control, bund_yield)
 
-#########################################################################
-# 5. Load the Instrument (Pure Target Shock)
-#########################################################################
-shock <- readRDS(file.path("Data","LP-IV","PureMP & Path","1.stage_instrument.rds"))
+# -------------------------------------------------------------------------
+# 5. Load & window shock (ts object → data.frame)
+# -------------------------------------------------------------------------
+# read the pre‑built quarterly ts
+shock_ts <- readRDS(file.path("Data","LP-IV","PureMP, Path & QE","1.stage_instrument.rds"))
 
-# Restrict shock to the same window as the other data
-shock <- window(shock, start = c(2006, 1), end = c(2019, 4))
-dates <- seq(as.Date("2006-01-01"), by = "quarter", length.out = length(shock))
+# restrict to our window
+shock_ts <- window(shock_ts,
+                   start = c(start_year, start_quarter),
+                   end   = c(end_year,   end_quarter))
 
-# Convert ts object values to a numeric vector
-shock <- as.numeric(shock)
+# build a Date vector for each quarter
+dates_q <- seq(start_date,
+               by = "quarter",
+               length.out = length(shock_ts))
 
-# Create a data frame that includes the date column (as POSIXct) and bund_yield.
-shock <- data.frame(
-  Date = as.POSIXct(dates, tz = "UTC"),  # Set timezone as needed.
-  shock = shock
+shock_df <- tibble(
+  Date  = dates_q,
+  shock = as.numeric(shock_ts)
 )
 
-#########################################################################
-# 6. Merge the Instrument into the Data (as an additional control variable)
-#########################################################################
-#data <- cbind(data, shock = shock)
-
-# Ensure output directory exists
+# -------------------------------------------------------------------------
+# 6. Save out
+# -------------------------------------------------------------------------
 output_dir <- file.path("Data", "LP-IV", "PureMP, Path & QE")
+if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
 
-# Save final dataset
-saveRDS(data, file = file.path(output_dir, "input_data.rds"))
-saveRDS(shock, file = file.path(output_dir, "shock.rds"))
+saveRDS(data,     file = file.path(output_dir, "input_data.rds"))
+saveRDS(shock_df, file = file.path(output_dir, "shock.rds"))
+
+cat("Saved input_data.rds and shock.rds for window ",
+    as.character(start_date), "–", as.character(end_date), "\n")
 
 

@@ -1,10 +1,8 @@
 # Clear workspace and console
-rm(list = ls())
-cat("\014")
+rm(list = ls()); cat("\014")
 
-# Set working directory based on system user
+# Determine working directory
 user <- Sys.info()[["user"]]
-
 if (user == "OscarEAM") {
   setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB")
 } else if (user == "B362561") {
@@ -14,7 +12,8 @@ if (user == "OscarEAM") {
 } else {
   stop("Ukendt bruger – tilføj sti for denne bruger.")
 }
-# Load required packages with error handling
+
+# Load required packages
 required_packages <- c("dplyr", "AER", "dynlm", "car", "zoo", "readxl", "stargazer", "lubridate")
 for (pkg in required_packages) {
   if (!require(pkg, character.only = TRUE)) {
@@ -23,64 +22,86 @@ for (pkg in required_packages) {
   }
 }
 
-# Define color palette for plotting
-burgundy <- "#760020"
+# Color palette
+burgundy       <- "#760020"
 burgundy_trans <- rgb(118/255, 0, 32/255, alpha = 0.3)
 
 # -------------------------------------------------------------------------
 # 1. Set Date Range for Monthly Data
 # -------------------------------------------------------------------------
-start_month <- c(2005, 1)
-end_month   <- c(2019, 12)
+start_month <- c(2005, 1)   # 2001‑01
+end_month   <- c(2019, 12)   # 2023‑10
 
-start_date <- as.Date(sprintf("%d-%02d-01", start_month[1], start_month[2]))
-end_date   <- as.Date(sprintf("%d-%02d-01", end_month[1], end_month[2]))
+start_date <- as.Date(sprintf("%04d-%02d-01", start_month[1], start_month[2]))
+end_date   <- as.Date(sprintf("%04d-%02d-01", end_month[1], end_month[2]))
 
-create_ts <- function(data, var_name, start_date, end_date) {
-  ts(data[[var_name]], start = c(year(start_date), month(start_date)), frequency = 12)
+# Helper: build a ts object after filtering
+create_ts <- function(df, var, start_month, end_month) {
+  df %>%
+    filter(Date >= start_date, Date <= end_date) %>%
+    arrange(Date) -> tmp
+  ts(tmp[[var]],
+     start     = start_month,
+     frequency = 12)
 }
 
 # -------------------------------------------------------------------------
-# 2. Load and Validate Data
+# 2. Load and Filter Shocks
 # -------------------------------------------------------------------------
-load_data <- function(file_path, error_msg) {
-  if (!file.exists(file_path)) stop(error_msg)
-  readRDS(file_path)
+load_data <- function(path, msg) {
+  if (!file.exists(path)) stop(msg)
+  readRDS(path)
 }
 
-# Henter shocks:
-shock <- load_data(
-  file.path("Instrumenter","Pure MP, Path & QE", "all_3_shocks.rds"),
+shocks <- load_data(
+  file.path("Instrumenter","Pure MP, Path & QE","all_3_shocks.rds"),
   "all_3_shocks.rds not found"
 ) %>%
-  filter(year(Date) >= start_month[1], year(Date) <= end_month[1])
+  filter(Date >= start_date, Date <= end_date)
 
-pureMP_m <- ts(shock$pureMP_m, start = start_month, end = end_month, frequency = 12)
-Path_m   <- ts(shock$Path_m,   start = start_month, end = end_month, frequency = 12)
-QE_m   <- ts(shock$QE_m,   start = start_month, end = end_month, frequency = 12)
+pureMP_m <- ts(shocks$pureMP_m,
+               start     = start_month,
+               frequency = 12)
+Path_m   <- ts(shocks$Path_m,
+               start     = start_month,
+               frequency = 12)
+QE_m     <- ts(shocks$QE_m,
+               start     = start_month,
+               frequency = 12)
 
-# Henter Kontrol Variable:
+# -------------------------------------------------------------------------
+# 3. Load and Filter Control Variables
+# -------------------------------------------------------------------------
 control <- load_data(
-  file.path("Data", "Interpolated data", "control_var_m.rds"),
+  file.path("Data","Interpolated data","control_var_m.rds"),
   "control_var_m.rds not found"
 ) %>%
-  filter(year(Date) >= start_month[1], year(Date) <= end_month[1])
+  filter(Date >= start_date, Date <= end_date)
 
-d_rGDP_m <- create_ts(control, "d_rGDP_m", start_date, end_date)
+d_rGDP_m <- create_ts(control, "d_rGDP_m", start_month, end_month)
+d_HICP_m <- create_ts(control, "d_HICP_m", start_month, end_month)
 
-d_HICP_m <- create_ts(control, "d_HICP_m", start_date, end_date)
+# -------------------------------------------------------------------------
+# 4. Load and Filter Bundesbank 2Y Yield
+# -------------------------------------------------------------------------
+Bundes_yield <- read_excel(
+  file.path("Data","Generic Bundesbank yield.xlsx")
+) %>%
+  filter(Date >= start_date, Date <= end_date)
 
-# Henter nu bundesbank data
-Bund_length <- "2Y"
-Bundes_yield <- read_excel(file.path("Data", "Generic Bundesbank yield.xlsx")) %>%
-  filter(year(Date) >= start_month[1], year(Date) <= end_month[1])
 
-Bund_2Y_m <- ts(Bundes_yield[[Bund_length]], start = start_month, frequency = 12)
-d_Bund_2Y_m <- diff(Bund_2Y_m) * 100
-d_Bund_2Y_m <- window(ts(c(NA, d_Bund_2Y_m), start = start_month, frequency = 12),
-                      start = start_month, end = end_month)
-Bund_2Y_m <- window(Bund_2Y_m, start = start_month, end = end_month)
-# Should go from 2005 to 2020 and have [1:180] data points
+Bund_2Y_m <- ts(
+  Bundes_yield[["2Y"]],
+  start     = start_month,
+  frequency = 12
+)
+# Check lengths
+stopifnot(length(pureMP_m) == length(d_rGDP_m),
+          length(Bund_2Y_m) == length(d_rGDP_m))
+
+cat("All series filtered and converted to ts from",
+    paste(start_month, collapse = "-"), "to",
+    paste(end_month, collapse = "-"), "\n")
 
 # -------------------------------------------------------------------------
 # 3. Combine Data and Create Time Series Object

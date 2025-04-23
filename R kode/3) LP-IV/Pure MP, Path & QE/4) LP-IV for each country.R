@@ -1,214 +1,120 @@
-
 # Clear workspace and console
-rm(list = ls())
-cat("\014")
-library(lpirfs)
+rm(list = ls()); cat("\014")
 
-# Set working directory based on system user
+# ─────────────────────────────────────────────────────────────────────────────
+# 0. Working dir & packages
+# ─────────────────────────────────────────────────────────────────────────────
 user <- Sys.info()[["user"]]
-
 if (user == "OscarEAM") {
   setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB")
 } else if (user == "B362561") {
   setwd("C:/Users/B362561/Desktop/OscarErnst-Heterogenous-spillover-ECB-3")
 } else if (user == "kasper") {
   setwd("/Users/kasper/Documents/GitHub/OscarErnst-Heterogenous-spillover-ECB")
-} else {
-  stop("Ukendt bruger – tilføj sti for denne bruger.")
-}
+} else stop("Unknown user")
 
-# 3) Load your main data (quarterly, per country) and policy shock
-#    Make sure 'full_data' has columns:
-#      - Date       (quarterly, e.g. 2006-01-01, 2006-04-01, etc.)
-#      - country    (e.g. "AT", "BE", etc.)
-#      - d_rGDP     (your outcome of interest)
-#      - bund_yield (a control or second outcome)
-#      - Possibly others (HICP, consumption, etc.)
-full_data <- readRDS("Data/LP-IV/PureMP, Path & QE/input_data.rds")
+library(lpirfs)
+library(dplyr)
 
-#    Load shock data that has the same or overlapping Date range:
-shock_all <- readRDS("Data/LP-IV/PureMP, Path & QE/shock.rds")
-# 'shock_all' should have columns:
-#   - Date     (matching the same quarterly dates)
-#   - target_q (the shock we want to use in the IV)
-
-# 3a) Merge the shock with the main dataset by Date
-#     After merging, each row in 'merged_data' has the relevant shock value.
-
-
-# 4) Define the set of countries
-countries <- c(
-  "AT", "BE", "CY", "DK", "EE", "EA20", "FI", "FR", "DE", 
-  "EL", "IE", "IT", "LV", "LT", "LU", "MT", "NL", "PT", 
-  "SK", "SI", "ES"
-)
-
-
-# 5) Create a lookup for nicer country names (optional)
-country_names <- c(
-  "AT"   = "Austria",
-  "BE"   = "Belgium",
-  "CY"   = "Cyprus",
-  "DE"   = "Germany",
-  "DK"   = "Denmark",
-  "EA20" = "Euro Area (20)",
-  "EE"   = "Estonia",
-  "EL"   = "Greece",
-  "ES"   = "Spain",
-  "FI"   = "Finland",
-  "FR"   = "France",
-  "IE"   = "Ireland",
-  "IT"   = "Italy",
-  "LT"   = "Lithuania",
-  "LU"   = "Luxembourg",
-  "LV"   = "Latvia",
-  "MT"   = "Malta",
-  "NL"   = "Netherlands",
-  "PT"   = "Portugal",
-  "SI"   = "Slovenia",
-  "SK"   = "Slovakia"
-)
-
-get_country_label <- function(code) {
-  if (code %in% names(country_names)) {
-    return(country_names[code])
-  } else {
-    return(code)  # fallback
-  }
-}
-
-# 6) Specify outcome variables for the model
-#    We'll assume you want "d_rGDP" as your main outcome
-#    and "bund_yield" as a second variable in the local projections.
-outcome_vars <- c("d_rGDP", "d_HICP", "bund_yield")
-
-# 7) Open a PNG device for multi-panel plots (21 countries -> 7 rows x 3 columns)
-png("Graphs/LP-IV/PureMP, Path & QE/Impulse Responses/AllCountries_rGDP.png", width = 3200, height = 4200, res = 300)
-par(mfrow = c(7, 3),
-    mar = c(4, 4, 2, 1),
-    cex.axis = 0.8,
-    cex.lab  = 0.8,
-    cex.main = 1.0)
-
-# Define the burgundy colors used in your plots
+# colors
 burgundy       <- "#760020"
 burgundy_trans <- rgb(118/255, 0, 32/255, alpha = 0.3)
 
-# 8) Loop over each country
-for (ctry in countries) {
+# ─────────────────────────────────────────────────────────────────────────────
+# 1. Load data + shock
+# ─────────────────────────────────────────────────────────────────────────────
+full_data <- readRDS("Data/LP-IV/PureMP, Path & QE/input_data.rds")
+shock_all <- readRDS("Data/LP-IV/PureMP, Path & QE/shock.rds")
+
+# Rename Date columns to 'date' for consistent merging
+full_data <- full_data %>% rename(date = Date)
+shock_all <- shock_all %>% rename(date = Date)
+
+countries <- c("DE","FR","NL","DK","AT","IT","ES","PT","EL")
+country_names <- c(
+  AT = "Austria", DE = "Germany", FR = "France",
+  NL = "Netherlands", DK = "Denmark", IT = "Italy",
+  ES = "Spain", PT = "Portugal", EL = "Greece"
+)
+get_label <- function(ctry) country_names[ctry]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 2. Function to plot IRFs for one variable across all countries
+# ─────────────────────────────────────────────────────────────────────────────
+plot_all_countries <- function(var, out_file) {
+  png(out_file, width = 3600, height = 3600, res = 300)
+  par(mfrow = c(3,3), mar = c(5,5,3,1), cex.lab = 0.8, cex.axis = 0.8, cex.main = 1)
   
-  # --- (a) Subset merged_data to this country
-  df_ctry <- full_data %>%
-    filter(country == ctry)
-  
-  # Check if we got any rows
-  if (nrow(df_ctry) == 0) {
-    message("No data found for country ", ctry, ". Skipping.")
-    next
-  }
-  
-  # Rename 'target_q' to 'shock' for convenience, and select relevant columns
-  df_ctry <- df_ctry %>%
-    dplyr::select(all_of(outcome_vars))
-  
-  # Omit rows with NA in the columns of interest
-  tmp <- na.omit(df_ctry)
-  
-  # If there's no data left after na.omit, skip
-  if (nrow(tmp) == 0) {
-    message("All data for country ", ctry, " is NA. Skipping.")
-    next
-  }
-  
-  # Create the endogenous data matrix (Y) and the shock series
-  Y     <- tmp[, outcome_vars, drop = FALSE]
-  shock <- shock_all %>% dplyr::select(shock)
-  
-  # --- (b) Run LP-IV within a tryCatch to handle any internal errors
-  lpiv_res <- tryCatch(
-    lp_lin_iv(
-      endog_data     = Y,
-      shock          = shock,
+  for (ctry in countries) {
+    # Subset country data and merge shock by date
+    d_ctry <- full_data %>%
+      filter(country == ctry) %>%
+      left_join(shock_all, by = "date")
+    
+    df <- na.omit(d_ctry %>% select(d_rGDP, d_HICP, bund_yield, shock))
+    if (nrow(df) == 0) {
+      plot(NA, axes = FALSE, xlab = "", ylab = "", main = get_label(ctry))
+      next
+    }
+    
+    # Prepare Y and shock matrices
+    Y_ctry  <- df[, c("d_rGDP","d_HICP","bund_yield")]
+    sh_ctry <- df["shock", drop = FALSE]
+    
+    # Run Local Projections IV
+    lpiv_ctry <- lp_lin_iv(
+      endog_data     = Y_ctry,
+      shock          = sh_ctry,
       lags_endog_lin = 4,
       trend          = 0,
-      confint        = 1.96,    # ~95% CI
+      confint        = 1.96,
       use_nw         = TRUE,
-      hor            = 8
-    ),
-    error = function(e) e  # return the error object on failure
-  )
-  
-  # If lp_lin_iv failed, skip
-  if (inherits(lpiv_res, "error")) {
-    message("Error for country ", ctry, ": ", lpiv_res$message)
-    next
+      hor            = 11
+    )
+    
+    # Normalize so Bund-yield(0) = 1
+    bpos    <- match("bund_yield", colnames(Y_ctry))
+    scale_f <- 1 / lpiv_ctry$irf_lin_mean[bpos, 1]
+    irf_mat <- lpiv_ctry$irf_lin_mean * scale_f
+    low_mat <- lpiv_ctry$irf_lin_low   * scale_f
+    up_mat  <- lpiv_ctry$irf_lin_up    * scale_f
+    
+    # Extract the desired variable
+    pos   <- match(var, colnames(Y_ctry))
+    irf   <- irf_mat[pos, ]
+    low   <- low_mat[pos, ]
+    up    <- up_mat[pos, ]
+    horiz <- 0:(length(irf) - 1)
+    
+    # Determine y-axis limits with buffer
+    r    <- range(c(irf, low, up), na.rm = TRUE)
+    buf  <- 0.25 * max(abs(r))
+    ylim <- c(r[1] - buf, r[2] + buf)
+    
+    # Plot
+    plot(horiz, irf, type = "n", ylim = ylim,
+         xlab = "Horizon (quarters)", ylab = "Impulse response",
+         main = get_label(ctry))
+    polygon(c(horiz, rev(horiz)), c(low, rev(up)),
+            col = burgundy_trans, border = NA)
+    lines(horiz, irf, type = "b", col = burgundy, lwd = 2, pch = 16)
+    abline(h = 0, lty = 2)
+    grid()
   }
   
-  # --- (c) Identify the row corresponding to 'bund_yield' in the IRF
-  shockpos <- match("bund_yield", outcome_vars)
-  
-  # If bund_yield isn't in outcome_vars or doesn't appear in the IRF matrix, skip
-  if (is.na(shockpos) || shockpos > nrow(lpiv_res$irf_lin_mean)) {
-    message("'bund_yield' not found in IRF for ", ctry, ". Skipping.")
-    next
-  }
-  
-  # We assume row shockpos, horizon=0 => column 1
-  impact_original <- lpiv_res$irf_lin_mean[shockpos, 1]
-  
-  # If 'impact_original' is NA or zero, scaling will fail
-  if (is.na(impact_original) || impact_original == 0) {
-    message("Cannot scale IRF for ", ctry, ": bund_yield(0) is NA or 0. Skipping.")
-    next
-  }
-  
-  # Compute the scaling factor
-  scaling <- 1 / impact_original
-  
-  # Scale the entire IRF
-  lpiv_res$irf_lin_mean <- lpiv_res$irf_lin_mean * scaling
-  lpiv_res$irf_lin_low  <- lpiv_res$irf_lin_low  * scaling
-  lpiv_res$irf_lin_up   <- lpiv_res$irf_lin_up   * scaling
-  
-  # --- (d) Extract IRF for d_rGDP
-  rgdp_pos <- match("d_rGDP", outcome_vars)
-  if (is.na(rgdp_pos) || rgdp_pos > nrow(lpiv_res$irf_lin_mean)) {
-    message("'d_rGDP' not found in IRF for ", ctry, ". Skipping.")
-    next
-  }
-  
-  rgdp_irf   <- lpiv_res$irf_lin_mean[rgdp_pos, ]
-  rgdp_lower <- lpiv_res$irf_lin_low [rgdp_pos, ]
-  rgdp_upper <- lpiv_res$irf_lin_up  [rgdp_pos, ]
-  
-  horizons <- 0:(length(rgdp_irf) - 1)
-  
-  # Determine y-limits
-  y_min <- min(rgdp_lower, na.rm = TRUE)
-  y_max <- max(rgdp_upper, na.rm = TRUE)
-  
-  # Country label
-  ctry_label <- get_country_label(ctry)
-  
-  # --- (e) Plot
-  plot(horizons, rgdp_irf,
-       type = "n",
-       ylim = c(y_min, y_max),
-       xlab = "Horizon (quarters)",
-       ylab = "Impulse Response: d_rGDP",
-       main = ctry_label)
-  abline(h = 0, lty = 2, col = "black")
-  
-  # Confidence band polygon
-  polygon(
-    x = c(horizons, rev(horizons)),
-    y = c(rgdp_lower, rev(rgdp_upper)),
-    col = burgundy_trans, border = NA
-  )
-  
-  # IRF line
-  lines(horizons, rgdp_irf, type = "b", col = burgundy, lwd = 2, pch = 16)
+  dev.off()
 }
-# 9) Close the PNG device
-dev.off()
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 3. Produce two plots: one for d_rGDP, one for d_HICP
+# ─────────────────────────────────────────────────────────────────────────────
+plot_all_countries(
+  var      = "d_rGDP",
+  out_file = "Graphs/LP-IV/PureMP, Path & QE/Impulse Responses/All_Countries_d_rGDP.png"
+)
+
+plot_all_countries(
+  var      = "d_HICP",
+  out_file = "Graphs/LP-IV/PureMP, Path & QE/Impulse Responses/All_Countries_d_HICP.png"
+)
 

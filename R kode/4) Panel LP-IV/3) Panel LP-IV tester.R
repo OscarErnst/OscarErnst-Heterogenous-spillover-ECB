@@ -1,59 +1,149 @@
-# Panel LP-IV with Country Interactions (starting with Denmark)
+########################################################################
+##  PANEL LP‑IV   –   HETEROGENEITY TESTS (Germany baseline)
+########################################################################
+rm(list = ls())
+cat("\014")
 
-# ─────────────────────────────────────────────────────────────
-# 1. Load and prepare data
-# ─────────────────────────────────────────────────────────────
+library(lpirfs)
 library(dplyr)
-library(plm)
-library(broom)
-library(car)
 
-# Load data
-setwd("C:/Users/B362561/Desktop/OscarErnst-Heterogenous-spillover-ECB-3")
-data <- readRDS("Data/Panel LP-IV/panel_input_data.rds")
+## --------------------------------------------------------------- 
+## 0. SETTINGS 
+## --------------------------------------------------------------- 
+horizon   <- 8
+lags      <- 2
 
-# Create Denmark dummy and interaction with the shock
-data$dum_DK <- ifelse(data$country == "DK", 1, 0)
-data$shock_interact_DK <- data$shock * data$dum_DK
+countries <- c("DE", "FR", "NL", "DK", "AT",    # core
+               "IT", "ES", "PT", "EL")    # periphery  (EL = Greece)
+baseline  <- "DE"
+others    <- setdiff(countries, baseline)
 
-# Drop rows with missing values (due to lags)
-data_clean <- na.omit(data)
+## --------------------------------------------------------------- 
+## 1. LOAD PANEL  +  INTERACTIONS
+## --------------------------------------------------------------- 
+user <- Sys.info()[["user"]]
+if      (user == "OscarEAM") {
+  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB")
+} else if (user == "B362561") {
+  setwd("C:/Users/B362561/Desktop/OscarErnst-Heterogenous-spillover-ECB-3")
+} else {
+  stop("Unknown user – adjust path manually")
+}
 
-# Define the formula for the panel regression
-formula <- d_rGDP ~ shock + shock_interact_DK +
-  d_HICP + bund_yield +
-  d_rGDP_lag_1 + d_rGDP_lag_2 + d_rGDP_lag_3 + d_rGDP_lag_4 +
-  d_HICP_lag_1 + d_HICP_lag_2 + d_HICP_lag_3 + d_HICP_lag_4 +
-  bund_yield_lag_1 + bund_yield_lag_2 + bund_yield_lag_3 + bund_yield_lag_4
+data <- readRDS("Data/Panel LP-IV/panel_input_data.rds") |>
+  arrange(country, Date)
 
-# Convert to panel data structure
-panel_data <- pdata.frame(data_clean, index = c("country", "Date"))
+## interaction: shock × 1{country = c}   for every c ≠ baseline
+for (c in others)
+  data[[paste0("shock_", c)]] <- ifelse(data$country == c, data$shock, 0)
 
-# Run fixed effects panel regression
-model <- plm(formula, data = panel_data, model = "within", effect = "individual")
+interaction_vars <- paste0("shock_", others)
 
-# Compute Driscoll-Kraay robust standard errors
-library(sandwich)
-library(lmtest)
-coefs <- coeftest(model, vcov = vcovSCC(model))
+## --------------------------------------------------------------- 
+## 2. ESTIMATE LP‑IV  (dependent = d_rGDP)
+## --------------------------------------------------------------- 
+lp <- lp_lin_panel(
+  data_set       = data,
+  endog_data     = "d_rGDP",
+  cumul_mult     = FALSE,
+  shock          = "shock",                # baseline response (Germany)
+  panel_model    = "pooling",
+  panel_effect   = "time",
+  robust_cov     = "vcovSCC",              # Driscoll–Kraay SEs
+  c_exog_data    = interaction_vars,       # deviations from baseline
+  l_exog_data    = "d_rGDP",
+  lags_exog_data = lags,
+  hor            = horizon,
+  confint        = 1.96
+)
 
-# Extract and format result for the interaction term
-results_df <- tidy(coefs) %>%
-  filter(term == "shock_interact_DK") %>%
-  mutate(
-    Country = "Denmark",
-    `t-stat` = estimate / std.error,
-    `p-value` = 2 * (1 - pnorm(abs(`t-stat`))),
-    Significance = case_when(
-      `p-value` < 0.001 ~ "***",
-      `p-value` < 0.01  ~ "**",
-      `p-value` < 0.05  ~ "*",
-      `p-value` < 0.1   ~ ".",
-      TRUE              ~ ""
-    )
-  ) %>%
-  select(Country, Estimate = estimate, `Std. Error` = std.error, `t-stat`, `p-value`, Significance)
+coefmat <- function(obj) if (is.matrix(obj)) obj else obj$coefficients
 
-# Print the results
-print(results_df)
+## --------------------------------------------------------------- 
+## 3.  COLLECT β and SE  →  t‑matrix   (rows = countries, cols = horizons)
+## --------------------------------------------------------------- 
+B <- S <- matrix(NA_real_, nrow = length(others), ncol = horizon,
+                 dimnames = list(others, paste0("h", 0:(horizon-1))))
 
+for (h in 1:horizon) {
+  mat <- coefmat(lp$reg_summaries[[h]])
+  for (c in others) {
+    row <- paste0("shock_", c)
+    if (row %in% rownames(mat)) {
+      B[c, h] <- mat[row, 1]
+      S[c, h] <- mat[row, 2]
+    }
+  }
+}
+
+tMat <- B / S                      # t‑statistics for H0: β_{c,h}=0  (vs DE)
+
+## --------------------------------------------------------------- 
+## 4‑A. OVERALL heterogeneity  (all horizons, all countries ≠ DE)
+## --------------------------------------------------------------- 
+t_all <- as.vector(tMat)
+keep  <- is.finite(t_all)
+chi2_overall <- sum(t_all[keep]^2)
+df_overall   <- sum(keep)
+p_overall    <- pchisq(chi2_overall, df_overall, lower.tail = FALSE)
+
+## --------------------------------------------------------------- 
+## 4‑B. COUNTRY‑level Wald tests  (all horizons for each c ≠ DE)
+## --------------------------------------------------------------- 
+country_tests <- data.frame(
+  country   = others,
+  chi2      = NA_real_,
+  df        = NA_integer_,
+  p         = NA_real_,
+  crit_05   = NA_real_,
+  reject_05 = FALSE
+)
+
+for (c in others) {
+  t_vec <- tMat[c, ]
+  keep  <- is.finite(t_vec)
+  if (any(keep)) {
+    chi2_val <- sum(t_vec[keep]^2)
+    df_val   <- sum(keep)
+    p_val    <- pchisq(chi2_val, df_val, lower.tail = FALSE)
+    country_tests[country_tests$country == c,
+                  c("chi2","df","p","crit_05","reject_05")] <-
+      list(chi2_val, df_val, p_val, qchisq(0.95, df_val), p_val < 0.05)
+  }
+}
+
+## --------------------------------------------------------------- 
+## 4‑C.  Horizon‑specific t‑tests (df = 1)  for completeness
+## --------------------------------------------------------------- 
+horizon_tests <- expand.grid(country = others,
+                             horizon = 0:(horizon-1),
+                             t = NA_real_, p = NA_real_, reject_05 = FALSE)
+
+for (c in others) for (h in 1:horizon) {
+  t_val <- tMat[c, h]
+  if (is.finite(t_val)) {
+    p_val <- 2 * pnorm(-abs(t_val))
+    horizon_tests[horizon_tests$country == c & horizon_tests$horizon == h-1,
+                  c("t","p","reject_05")] <- list(t_val, p_val, p_val < 0.05)
+  }
+}
+
+## --------------------------------------------------------------- 
+## 5.  PRINT RESULTS
+## --------------------------------------------------------------- 
+fmt  <- function(x) sprintf("%.6f", x)
+
+cat("\n================  OVERALL heterogeneity ====================\n")
+cat("Chi² =", round(chi2_overall, 2),
+    " df =", df_overall,
+    " p =", fmt(p_overall),
+    ifelse(p_overall < 0.05, " ==> REJECT\n", " ==> fail to reject\n"))
+
+cat("\n==========  COUNTRY tests (vs Germany, all horizons)  =======\n")
+country_tests$p <- fmt(country_tests$p)
+print(country_tests[, c("country","chi2","df","crit_05","p","reject_05")],
+      row.names = FALSE, right = FALSE)
+
+cat("\nFirst few rows of horizon‑specific tests\n")
+horizon_tests$p <- fmt(horizon_tests$p)
+print(head(horizon_tests, 12), row.names = FALSE, right = FALSE)

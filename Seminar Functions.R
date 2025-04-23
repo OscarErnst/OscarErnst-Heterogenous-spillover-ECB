@@ -1,76 +1,54 @@
-OIS_data_formatter <- function(OIS_rate, sheet_name) {
-  # Load required libraries (you can also load them once outside the function)
-  library(readxl)
-  library(dplyr)
-  library(stringr)
-  library(tidyr)
-  library(lubridate)
+read_OIS_intra <- function(maturity   = c("1M", "6M", "1Y", "5Y"),
+                           sheet_date,                    # fx "06-03-25"
+                           base_dir   = file.path("Data", "Bloomberg data")) {
   
-  # 1) Construct the file path (based on your pattern "ESTR X.xlsx")
-  file_path <- paste0(
-    "/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/",
-    "Økonomi - Kandidat/Advanced Macroeconomics - Empirical Analysis/",
-    "ESTR OIS data/ESTR ", OIS_rate, ".xlsx"
-  )
+  # ---- pakker --------------------------------------------------------------
+  suppressPackageStartupMessages({
+    library(readxl);  library(dplyr);  library(stringr)
+    library(lubridate); library(readr); library(hms)
+  })
   
-  # 2) Read the raw data
-  df_raw <- read_excel(file_path, sheet = sheet_name)
+  # ---- map løbetid -> filnavn ----------------------------------------------
+  file_map <- c(`1M` = "ESTR 1M.xlsx",
+                `6M` = "ESTR 6M.xlsx",
+                `1Y` = "ESTR 1Y.xlsx",   # 1‑års‑filen hedder ESTR
+                `5Y` = "ESTR 5Y.xlsx")
   
-  # 3) Identify the row that has the date, e.g. "18JUL2024_00:00:00.000000"
-  date_row <- df_raw %>%
-    filter(str_detect(`Time Interval`, "_00:00:00.000000"))
+  maturity  <- match.arg(maturity)
+  file_path <- file.path(base_dir, file_map[[maturity]])
+  if (!file.exists(file_path))
+    stop("Filen findes ikke: ", file_path)
   
-  # 4) Parse out the date (e.g. "18JUL2024") and convert to Date
-  #    If that row doesn't exist, default to "1970-01-01" or handle as needed.
-  if (nrow(date_row) > 0) {
-    # Example "18JUL2024_00:00:00.000000" -> first 9 chars = "18JUL2024"
-    date_str_raw <- date_row$`Time Interval`[1]
-    date_str     <- str_sub(date_str_raw, 1, 9)        # "18JUL2024"
-    # "d%b%Y" means (day)(abbrev-month)(year), e.g. 18JUL2024
-    my_date      <- as.Date(date_str, format = "%d%b%Y")
+  # ---- læs arket -----------------------------------------------------------
+  df_raw <- read_excel(file_path,
+                       sheet        = sheet_date,
+                       .name_repair = "minimal")[, 1:3]
+  names(df_raw) <- c("Dates", "Open", "Close")
+  
+  # ---- parse klokkeslæt ----------------------------------------------------
+  # 1) Hvis Excel allerede gav en datetimE‑kolonne (POSIXct), brug den …
+  if (inherits(df_raw$Dates, "POSIXct")) {
+    time_vec <- as_hms(df_raw$Dates)
+    
+    # 2) … ellers er det formater à la "13.05.00" → lav dem selv
+  } else if (all(stringr::str_detect(df_raw$Dates, "^\\d{2}\\.\\d{2}\\.\\d{2}$"))) {
+    stamp <- stringr::str_replace_all(df_raw$Dates, "\\.", ":")
+    my_date <- lubridate::dmy(sheet_date)
+    time_vec <- as_hms(
+      as.POSIXct(paste(my_date, stamp),
+                 format = "%Y-%m-%d %H:%M:%S", tz = "Europe/Copenhagen"))
   } else {
-    # If no date row found, use a dummy date or stop with an error
-    # my_date <- as.Date("1970-01-01")
-    stop("No date row found (e.g. '18JUL2024_00:00:00.000000') in Time Interval!")
+    stop("Ukendt dato/tids‑format i kolonnen 'Dates'")
   }
   
-  # 5) Remove the date row and any "Summary" row from the data
-  #    Also remove lines with underscores in "Time Interval"
-  #    (except the one we used for the date, which we already singled out)
-  df_clean <- df_raw %>%
-    filter(
-      !`Time Interval` %in% c("Summary") &
-        !str_detect(`Time Interval`, "_")
-    )
+  # ---- parse værdier (håndter evt. komma‑decimal) --------------------------
+  open_vec  <- if (is.numeric(df_raw$Open))  df_raw$Open
+  else readr::parse_number(df_raw$Open,  locale = locale(decimal_mark = ","))
+  close_vec <- if (is.numeric(df_raw$Close)) df_raw$Close
+  else readr::parse_number(df_raw$Close, locale = locale(decimal_mark = ","))
   
-  # 6) Now transform "HH:MM - HH:MM" into start/end times
-  df_final <- df_clean %>%
-    # Optionally remove columns you don’t need
-    select(-`Tick Count`, -Volume) %>%
-    
-    # Split "08:20 - 08:25" into start_time_str / end_time_str
-    separate(
-      `Time Interval`,
-      into = c("start_time_str", "end_time_str"),
-      sep = " - ",
-      remove = FALSE
-    ) %>%
-    
-    # Parse those as lubridate "Period" objects
-    mutate(
-      start_time = hm(start_time_str),
-      end_time   = hm(end_time_str)
-    ) %>%
-    
-    # Create a POSIXct from the parsed date + start HH:MM
-    mutate(
-      start_time_ct = as.POSIXct(
-        paste(my_date, start_time_str),
-        format = "%Y-%m-%d %H:%M",
-        tz = "UTC"
-      )
-    )
-  
-  return(df_final)
+  # ---- slutresultat --------------------------------------------------------
+  tibble::tibble(time = time_vec,
+                 open = open_vec,
+                 close = close_vec)
 }
-

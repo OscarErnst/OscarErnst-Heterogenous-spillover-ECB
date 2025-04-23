@@ -24,10 +24,10 @@ library(eurostat)
 
 # Indstillinger:
 # List of countries: EA20 plus additional countries
-countries <- c("EA20", "AT", "BE", "CY", "EE", "FI", "FR", "DE", "EL", "IE", 
-               "IT", "LV", "LT", "LU", "MT", "NL", "PT", "SK", "SI", "ES", "DK")
-start_year <- 2000
-end_year <- 2020
+countries <- c("EA20","DE", "FR", "NL", "DK", "AT",    # core
+               "IT", "ES", "PT", "EL")    # periphery (EL = Greece)
+start_year <- 1999
+end_year <- 2024
 
 
 # Load required packages with error handling
