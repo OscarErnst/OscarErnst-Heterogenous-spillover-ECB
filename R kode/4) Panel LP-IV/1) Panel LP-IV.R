@@ -20,7 +20,7 @@ library(fixest)
 ##  1.  Settings
 ################################################################################
 horizon   <- 13          # LP horizons (0 … 7)
-lags      <- 6          # lags of each control
+lags      <- 9          # lags of each control
 countries <- c("DE","FR","NL","DK","AT","IT","ES","PT","EL")
 baseline  <- "DE"
 others    <- setdiff(countries, baseline)
@@ -79,7 +79,7 @@ sensitivity_GDP <- lag_sensitivity_table(
   data        = data,
   outcome_var = "d_rGDP",
   horizon     = horizon,
-  max_p       = 8,
+  max_p       = 6,
   baseline    = baseline,
   others      = others,
   nice_names  = country_names
