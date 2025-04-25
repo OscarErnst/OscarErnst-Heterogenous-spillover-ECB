@@ -296,4 +296,65 @@ lag_sensitivity_table <- function(data,
   return(out_tbl)
 }
 
-
+# ────────────────────────────────────────────────────────────────
+#  Horizon-sensitivity helper
+#  Produces a table like
+#  Country   H = 4   H = 5   …   H = 12
+#              8.13  12.77*  …   46.15***
+# ────────────────────────────────────────────────────────────────
+# ── horizon-sensitivity helper  ──────────────────────────────────────────────
+horizon_sensitivity_table <- function(data,
+                                      outcome_var = "d_HICP",
+                                      min_H       = 4,
+                                      max_H       = 12,
+                                      p_lags      = 4,         # baseline lag length
+                                      baseline    = "DE",
+                                      others      = setdiff(unique(data$country), baseline),
+                                      nice_names  = NULL) {
+  
+  require(dplyr)
+  require(tidyr)
+  
+  store <- vector("list", max_H - min_H + 1)
+  idx   <- 1
+  
+  for (H in min_H:max_H) {
+    ## correctly name the arguments:
+    res <- estimate_panel_lpiv(
+      data        = data,
+      outcome_var = outcome_var,
+      horizon     = H,
+      lags        = p_lags,
+      baseline    = baseline,
+      others      = others
+    )
+    
+    jt <- res$joint_tests %>%
+      mutate(
+        H        = H,
+        display  = sprintf(
+          "%.2f%s",
+          chi2_stat,
+          ifelse(reject_05 == "Reject", "***", "")
+        )
+      ) %>%
+      select(country, H, display)
+    
+    store[[idx]] <- jt
+    idx <- idx + 1
+  }
+  
+  out_tbl <- bind_rows(store) %>%
+    pivot_wider(
+      names_from  = H,
+      values_from = display,
+      names_prefix = "H = "
+    ) %>%
+    arrange(match(country, c(baseline, others)))
+  
+  if (!is.null(nice_names)) {
+    out_tbl$country <- recode(out_tbl$country, !!!nice_names)
+  }
+  
+  return(out_tbl)
+}
