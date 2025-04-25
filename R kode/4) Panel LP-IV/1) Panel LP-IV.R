@@ -65,28 +65,28 @@ plot_irfs_panel(Panel_LP_IV_results_HICP$IRF_summary,
                 var_lab   = "d_HICP IRF")
 
 
-# sensitivity_HICP <- lag_sensitivity_table(
-#   data        = data,
-#   outcome_var = "d_HICP",
-#   horizon     = horizon,
-#   max_p       = 8,
-#   baseline    = baseline,
-#   others      = others,
-#   nice_names  = country_names
-# )
-# 
-# sensitivity_GDP <- lag_sensitivity_table(
-#   data        = data,
-#   outcome_var = "d_rGDP",
-#   horizon     = horizon,
-#   max_p       = 6,
-#   baseline    = baseline,
-#   others      = others,
-#   nice_names  = country_names
-# )
-# 
-# print(sensitivity_HICP, row.names = FALSE)
-# print(sensitivity_GDP, row.names = FALSE)
+sensitivity_HICP <- lag_sensitivity_table(
+  data        = data,
+  outcome_var = "d_HICP",
+  horizon     = horizon,
+  max_p       = 8,
+  baseline    = baseline,
+  others      = others,
+  nice_names  = country_names
+)
+
+sensitivity_GDP <- lag_sensitivity_table(
+  data        = data,
+  outcome_var = "d_rGDP",
+  horizon     = horizon,
+  max_p       = 6,
+  baseline    = baseline,
+  others      = others,
+  nice_names  = country_names
+)
+
+print(sensitivity_HICP, row.names = FALSE)
+print(sensitivity_GDP, row.names = FALSE)
 
 # Example call
 h_sens_HICP <- horizon_sensitivity_table(
