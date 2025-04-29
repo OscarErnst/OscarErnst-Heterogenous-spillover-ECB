@@ -1,16 +1,21 @@
 ###############################################################################
-#  ESTR OIS intradag – 2×2‑plots  (base graphics + klokkeslæt på x‑aksen)    #
+#  ESTR OIS intradag – 2×2-plots  (base graphics + klokkeslæt på x-aksen)
 ###############################################################################
 
 # ---------------------------------------------------------------------------
-# 0)  Clear workspace & console, indlæs lpirfs
+# 0)  Clear workspace & console, indlæs pakker
 # ---------------------------------------------------------------------------
 rm(list = ls())
 cat("\014")
 
 library(lpirfs)
-library(readxl);   library(dplyr);  library(purrr)
-library(stringr);  library(lubridate); library(readr);  library(hms)
+library(readxl)
+library(dplyr)
+library(purrr)
+library(stringr)
+library(lubridate)
+library(readr)
+library(hms)
 
 # ---------------------------------------------------------------------------
 # 1)  Working directory pr. bruger
@@ -28,12 +33,12 @@ if      (user == "OscarEAM") {
 }
 
 # ---------------------------------------------------------------------------
-# 2)  Egne hjælpefunktioner  (read_OIS_intra) -------------------------------
+# 2)  Egne hjælpefunktioner  (read_OIS_intra)
 # ---------------------------------------------------------------------------
 source("Seminar Functions.R")
 
 if (!exists("read_OIS_intra")) {
-  # fallback‑version (kort)
+  # fallback-version (kort)
   read_OIS_intra <- function(maturity = c("1M","6M","1Y","5Y"),
                              sheet_date,
                              base_dir = file.path("Data","Bloomberg data")) {
@@ -57,35 +62,37 @@ if (!exists("read_OIS_intra")) {
 }
 
 # ---------------------------------------------------------------------------
-# 3)  Find alle dato‑faner  ---------------------------------------------------
+# 3)  Find alle dato-faner
 # ---------------------------------------------------------------------------
 base_dir  <- file.path("Data","Bloomberg data")
 ois_files <- c("ESTR 1M.xlsx","ESTR 6M.xlsx","ESTR 1Y.xlsx","ESTR 5Y.xlsx")
-windows   <- ois_files |>
+
+windows <- ois_files |>
   map(~ excel_sheets(file.path(base_dir, .x))) |>
   unlist() |> unique() |> sort()
+
 print(windows)
 
 # ---------------------------------------------------------------------------
-# 4)  Plot‑hjælpere  ----------------------------------------------------------
+# 4)  Plot-hjælpere
 # ---------------------------------------------------------------------------
-# konverter klokkeslæt til positions‑index
+# konverter klokkeslæt til positions-index (til vertikale linjer)
 vline_pos <- function(df, times_chr){
   which(format(df$time, "%H:%M:%S") %in% times_chr)
 }
 
-# grid‑breaks til x‑aksen (hver halve time)
-tick_pos  <- function(df){
-  idx <- which(minute(df$time) %% 30 == 0 & second(df$time)==0)
+# grid-breaks til x-aksen  – kun hele timer
+tick_pos <- function(df){                      # (uændret siden sidst)
+  idx <- which(minute(df$time) == 0 & second(df$time) == 0)
   if (length(idx) == 0) idx <- pretty(seq_along(df$time), n = 4)
   idx
 }
 
 # ---------------------------------------------------------------------------
-# 5)  Loop over dato‑faner -> base‑PNG  --------------------------------------
+# 5)  Loop over dato-faner -> base-PNG
 # ---------------------------------------------------------------------------
-out_dir <- "figures_base"
-if(!dir.exists(out_dir)) dir.create(out_dir)
+out_dir <- "Graphs/OIS rate changes"
+if(!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
 
 for (sheet_date in windows) {
   
@@ -97,7 +104,7 @@ for (sheet_date in windows) {
   d_5Y <- read_OIS_intra("5Y", sheet_date)
   
   png(file.path(out_dir, paste0("OIS_intraday_", sheet_date, ".png")),
-      width = 1800, height = 1800, res = 300)
+      width = 2400, height = 2400, res = 300)
   
   par(mfrow = c(2,2), mar = c(4,4,3,1),
       cex.main = 1.4, cex.lab = 1.3, cex.axis = 1.1)
@@ -107,20 +114,20 @@ for (sheet_date in windows) {
   for(mat in names(plot_list)){
     df <- plot_list[[mat]]
     
-    # plot close‑priser
+    ## plot close-priser
     plot(df$close, type = "l", lwd = 2, col = "darkblue",
          main = paste(mat, "ESTR OIS Intraday"),
          xlab = "Hour", ylab = "pct",
-         xaxt = "n")                      # sluk default x‑akse
+         xaxt = "n")                        # sluk default x-akse
     
-    # x‑ticks
+    ## x-ticks (nu kun hele timer, HH:MM)
     tpos <- tick_pos(df)
-    axis(1, at = tpos, labels = format(df$time[tpos], "%H:%M:%S"))
+    axis(1, at = tpos, labels = format(df$time[tpos], "%H:%M"))
     
-    # vertikale linjer (på index‑basis)
+    ## vertikale linjer (på index-basis)
     vpos <- vline_pos(df, c("14:00:00","15:00:00","14:15:00","14:45:00"))
-    abline(v = vpos[c(1,4)], col = "black", lty = 2, lwd = 2)   # sort stiplet
-    abline(v = vpos[c(2,3)], col = "darkred", lty = 1, lwd = 2) # rød fuld
+    abline(v = vpos[c(1,4)], col = "black",   lty = 2, lwd = 2)  # sort stiplet
+    abline(v = vpos[c(2,3)], col = "darkred", lty = 1, lwd = 2)  # rød fuld
     
     grid(nx = NA, ny = NULL, col = "grey85")
   }
@@ -129,4 +136,3 @@ for (sheet_date in windows) {
 }
 
 cat("Alle plots gemt i:", normalizePath(out_dir), "\n")
-

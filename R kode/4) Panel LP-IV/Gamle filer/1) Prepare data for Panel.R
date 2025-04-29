@@ -20,8 +20,8 @@ library(dplyr)
 library(lubridate)
 
 # Load datasets
-data <- readRDS("Data/LP-IV/PureMP, Path & QE/input_data.rds")
-shock <- readRDS("Data/LP-IV/PureMP, Path & QE/shock.rds")
+data <- readRDS("Data/LP-IV/PureMP, Path & QE/input_data_post_qe.rds")
+shock <- readRDS("Data/LP-IV/PureMP, Path & QE/shocks_post_qe.rds")
 
 # Adjust shock date to match the last day of the previous quarter
 shock <- shock %>%
@@ -39,7 +39,7 @@ panel_data <- data %>%
 head(panel_data)
 
 # Save merged dataset
-output_path <- "Data/Panel LP-IV/panel_input_data.rds"
+output_path <- "Data/Panel LP-IV/panel_input_data_post_qe.rds"
 saveRDS(panel_data, file = output_path)
 
 cat("Merged and correctly dated panel data saved successfully to:", output_path, "\n")

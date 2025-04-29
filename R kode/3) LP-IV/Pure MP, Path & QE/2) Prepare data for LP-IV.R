@@ -69,7 +69,7 @@ rm(control, bund_yield)
 # 5. Load & window shock (ts object → data.frame)
 # -------------------------------------------------------------------------
 # read the pre‑built quarterly ts
-shock_ts <- readRDS(file.path("Data","LP-IV","PureMP, Path & QE","1.stage_instrument.rds"))
+shock_ts <- readRDS(file.path("Data","LP-IV","PureMP, Path & QE","1.stage_instrument_full_ts.rds"))
 
 # restrict to our window
 shock_ts <- window(shock_ts,
@@ -93,7 +93,7 @@ output_dir <- file.path("Data", "LP-IV", "PureMP, Path & QE")
 if (!dir.exists(output_dir)) dir.create(output_dir, recursive = TRUE)
 
 saveRDS(data,     file = file.path(output_dir, "input_data.rds"))
-saveRDS(shock_df, file = file.path(output_dir, "shock.rds"))
+saveRDS(shock_df, file = file.path(output_dir, "shocks.rds"))
 
 cat("Saved input_data.rds and shock.rds for window ",
     as.character(start_date), "–", as.character(end_date), "\n")

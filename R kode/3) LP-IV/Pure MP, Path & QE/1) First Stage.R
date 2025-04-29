@@ -29,8 +29,8 @@ burgundy_trans <- rgb(118/255, 0, 32/255, alpha = 0.3)
 # -------------------------------------------------------------------------
 # 1. Set Date Range for Monthly Data
 # -------------------------------------------------------------------------
-start_month <- c(2005, 1)   # 2001‑01
-end_month   <- c(2019, 12)   # 2023‑10
+start_month <- c(2001, 1)   # 2001‑01
+end_month   <- c(2022, 12)   # 2023‑10
 
 start_date <- as.Date(sprintf("%04d-%02d-01", start_month[1], start_month[2]))
 end_date   <- as.Date(sprintf("%04d-%02d-01", end_month[1], end_month[2]))
@@ -160,8 +160,8 @@ create_quarterly_ts <- function(monthly_data) {
 # OBS: We lose the first 2 quarters, as we use 12 lags in the 1.stage.
 shock_var_q_ts <- create_quarterly_ts(Bund_2Y_m_hat)
 
-saveRDS(shock_var_q_ts, file = file.path("Data","LP-IV","PureMP, Path & QE","1.stage_instrument.rds"))
-cat("\nQuarterly instrument saved to", file.path("Data","LP-IV","PureMP, Path & QE","1.stage_instrument.rds"), "\n")
+saveRDS(shock_var_q_ts, file = file.path("Data","LP-IV","PureMP, Path & QE","1.stage_instrument_full_ts.rds"))
+cat("\nQuarterly instrument saved to", file.path("Data","LP-IV","PureMP, Path & QE","1.stage_instrument_full_ts.rds"), "\n")
 
 # -------------------------------------------------------------------------
 # 6. Create Plots

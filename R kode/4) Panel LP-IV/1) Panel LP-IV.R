@@ -20,7 +20,7 @@ library(fixest)
 ##  1.  Settings
 ################################################################################
 horizon   <- 13          # LP horizons (0 … 7)
-lags      <- 6          # lags of each control
+lags      <- 4          # lags of each control
 countries <- c("DE","FR","NL","DK","AT","IT","ES","PT","EL")
 baseline  <- "DE"
 others    <- setdiff(countries, baseline)
@@ -65,28 +65,28 @@ plot_irfs_panel(Panel_LP_IV_results_HICP$IRF_summary,
                 var_lab   = "d_HICP IRF")
 
 
-# sensitivity_HICP <- lag_sensitivity_table(
-#   data        = data,
-#   outcome_var = "d_HICP",
-#   horizon     = horizon,
-#   max_p       = 8,
-#   baseline    = baseline,
-#   others      = others,
-#   nice_names  = country_names
-# )
-# 
-# sensitivity_GDP <- lag_sensitivity_table(
-#   data        = data,
-#   outcome_var = "d_rGDP",
-#   horizon     = horizon,
-#   max_p       = 6,
-#   baseline    = baseline,
-#   others      = others,
-#   nice_names  = country_names
-# )
-# 
-# print(sensitivity_HICP, row.names = FALSE)
-# print(sensitivity_GDP, row.names = FALSE)
+sensitivity_HICP <- lag_sensitivity_table(
+  data        = data,
+  outcome_var = "d_HICP",
+  horizon     = horizon,
+  max_p       = 8,
+  baseline    = baseline,
+  others      = others,
+  nice_names  = country_names
+)
+
+sensitivity_GDP <- lag_sensitivity_table(
+  data        = data,
+  outcome_var = "d_rGDP",
+  horizon     = horizon,
+  max_p       = 8,
+  baseline    = baseline,
+  others      = others,
+  nice_names  = country_names
+)
+
+print(sensitivity_HICP, row.names = FALSE)
+print(sensitivity_GDP, row.names = FALSE)
 
 # Example call
 h_sens_HICP <- horizon_sensitivity_table(
@@ -113,3 +113,8 @@ h_sens_GDP <- horizon_sensitivity_table(
   nice_names  = country_names
 )
 
+
+results <- estimate_panel_lpiv(data, outcome_var = "d_HICP", horizon = 12, lags = 4, baseline = "DE", others = c("FR", "NL", "IT"))
+
+# Hent den kumulative tabel
+results$cumulative_irf

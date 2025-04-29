@@ -1,28 +1,3 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# Estimate Panel LP-IV: heterogeneity in responses via interacted shocks
-# ─────────────────────────────────────────────────────────────────────────────
-#'
-#' Estimate Panel Local Projections IV (LP-IV) with Interacted Country Shocks
-#'
-#' @description
-#' This function estimates a panel local projections IV model with Driscoll-Kraay standard errors,
-#' allowing for heterogeneous treatment effects across countries through country-specific shock interactions.
-#'
-#' @param data A panel data frame containing at least: country, Date, shock, and control variables.
-#' @param outcome_var Name of the dependent variable to be projected (character string).
-#' @param horizon Number of forecast horizons to estimate (integer).
-#' @param lags Number of lags to include for each control variable.
-#' @param baseline ISO country code used as the reference country.
-#' @param others Character vector of other country codes for interactions.
-#'
-#' @return A list with:
-#'   - IRF_summary: A list of length equal to `horizon`, each element containing IRF mean, lower and upper CI for all countries.
-#'   - per_horizon: A data frame of per-horizon DK t-tests comparing each country to baseline.
-#'   - joint_tests: A data frame of DK-based joint chi-squared tests across all horizons for each country.
-#'
-#' @examples
-#' results <- estimate_panel_lpiv(data, "d_rGDP", horizon = 8, lags = 4, baseline = "DE", others = c("FR", "IT"))
-# -----------------------------------------------------------------------------
 library(dplyr)
 library(fixest)
 
@@ -112,6 +87,31 @@ estimate_panel_lpiv <- function(data, outcome_var,
            IRF_upper = IRF_upper)
   }
   
+  ## ----------- cumulative IRFs (rounded)
+  IRF_means  <- do.call(rbind, lapply(IRF_summary_list, function(x) x$IRF_mean))
+  IRF_lowers <- do.call(rbind, lapply(IRF_summary_list, function(x) x$IRF_lower))
+  IRF_uppers <- do.call(rbind, lapply(IRF_summary_list, function(x) x$IRF_upper))
+  
+  cumulative_means  <- t(apply(IRF_means, 2, cumsum))
+  cumulative_lowers <- t(apply(IRF_lowers, 2, cumsum))
+  cumulative_uppers <- t(apply(IRF_uppers, 2, cumsum))
+  
+  cumulative_means  <- round(cumulative_means, 3)
+  cumulative_lowers <- round(cumulative_lowers, 3)
+  cumulative_uppers <- round(cumulative_uppers, 3)
+  
+  cumulative_mean_df <- as.data.frame(t(cumulative_means))
+  cumulative_lower_df <- as.data.frame(t(cumulative_lowers))
+  cumulative_upper_df <- as.data.frame(t(cumulative_uppers))
+  
+  cumulative_mean_df$horizon <- 0:(horizon-1)
+  cumulative_lower_df$horizon <- 0:(horizon-1)
+  cumulative_upper_df$horizon <- 0:(horizon-1)
+  
+  cumulative_mean_df <- cumulative_mean_df %>% relocate(horizon)
+  cumulative_lower_df <- cumulative_lower_df %>% relocate(horizon)
+  cumulative_upper_df <- cumulative_upper_df %>% relocate(horizon)
+  
   ## ----------- per-horizon DK t-tests
   horizon_tests <- do.call(rbind, lapply(others, function(c) {
     do.call(rbind, lapply(0:(horizon-1), function(h) {
@@ -152,9 +152,14 @@ estimate_panel_lpiv <- function(data, outcome_var,
   }))
   
   list(IRF_summary = IRF_summary_list,
+       cumulative_mean_irf = cumulative_mean_df,
+       cumulative_lower_irf = cumulative_lower_df,
+       cumulative_upper_irf = cumulative_upper_df,
        per_horizon = horizon_tests,
        joint_tests = joint_tests)
 }
+
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Helper: ISO → Pretty Country Name
@@ -265,35 +270,52 @@ plot_irfs_panel <- function(irf_summary_list,
 # -----------------------------------------------------------------------------
 lag_sensitivity_table <- function(data,
                                   outcome_var = "d_HICP",
-                                  horizon     = 13,
+                                  horizon     = 13,       # df til χ²-testen
                                   max_p       = 6,
                                   baseline    = "DE",
                                   others      = setdiff(unique(data$country), baseline),
                                   nice_names  = NULL) {
   
-  results <- list()
+  library(dplyr)
+  library(tidyr)
   
-  for (p in 1:max_p) {
+  results <- vector("list", max_p)
+  
+  for (p in seq_len(max_p)) {
+    
     res <- estimate_panel_lpiv(data, outcome_var, horizon, p, baseline, others)
     
-    jt <- res$joint_tests |>
-      mutate(lag_p = p,
-             display = sprintf("%.2f (%s)", chi2_stat, reject_05))
+    jt <- res$joint_tests %>%
+      mutate(
+        # p-værdi fra χ²(df = horizon)
+        p_value = pchisq(chi2_stat, df = horizon, lower.tail = FALSE),
+        
+        # stjerne­kode
+        stars = case_when(
+          p_value < 0.001 ~ "***",
+          p_value < 0.010 ~ "**",
+          p_value < 0.050 ~ "*",
+          TRUE            ~ ""
+        ),
+        
+        lag_p   = p,
+        display = sprintf("%.2f%s", chi2_stat, stars)
+      )
     
     results[[p]] <- jt[, c("country", "lag_p", "display")]
   }
   
-  library(tidyr)
-  out_tbl <- bind_rows(results) |>
-    pivot_wider(names_from = lag_p,
+  out_tbl <- bind_rows(results) %>%
+    pivot_wider(names_from  = lag_p,
                 values_from = display,
-                names_glue = "p = {lag_p}") |>
+                names_glue  = "p = {lag_p}") %>%
     arrange(match(country, c(baseline, others)))
   
+  # pæne landenavne hvis ønsket
   if (!is.null(nice_names))
-    out_tbl$country <- ifelse(out_tbl$country %in% names(nice_names), nice_names[out_tbl$country], out_tbl$country)
+    out_tbl$country <- dplyr::recode(out_tbl$country, !!!nice_names)
   
-  return(out_tbl)
+  out_tbl
 }
 
 # ────────────────────────────────────────────────────────────────
