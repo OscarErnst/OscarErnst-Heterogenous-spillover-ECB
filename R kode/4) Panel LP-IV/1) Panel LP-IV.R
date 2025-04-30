@@ -79,11 +79,8 @@ sensitivity_GDP <- lag_sensitivity_table(
   data        = data,
   outcome_var = "d_rGDP",
   horizon     = horizon,
-<<<<<<< HEAD
   max_p       = 8,
-=======
   max_p       = 6,
->>>>>>> f6d67ade80718f9cf2ae0dbd3e4070e409fedc8f
   baseline    = baseline,
   others      = others,
   nice_names  = country_names

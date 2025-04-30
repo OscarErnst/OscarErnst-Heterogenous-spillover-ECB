@@ -731,3 +731,14 @@ saveRDS(all_shocks, file = "Instrumenter/PURE MP, Path & QE/all_3_shocks.rds")
 
 # Check the result
 head(all_shocks)
+
+shocks_list <- all_shocks[, c("pureMP_m", "Path_m", "QE_m")]
+
+# Mean test
+lapply(shocks_list, function(shock) {
+  t.test(shock, mu = 0)
+})
+
+lapply(shocks_list, function(shock) {
+  Box.test(shock, lag = 12, type = "Ljung-Box")
+})

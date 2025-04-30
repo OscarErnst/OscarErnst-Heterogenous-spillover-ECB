@@ -1,6 +1,7 @@
 library(dplyr)
 library(fixest)
 
+
 estimate_panel_lpiv <- function(data, outcome_var,
                                 horizon, lags,
                                 baseline, others) {
