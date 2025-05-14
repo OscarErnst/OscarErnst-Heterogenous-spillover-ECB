@@ -38,7 +38,7 @@ estimate_panel_lpiv <- function(data, outcome_var,
     
     ## regression data
     reg_data <- data_h %>%
-      select(country, Date, y_dep,
+      dplyr::select(country, Date, y_dep,
              shock, starts_with("shock_"),
              starts_with("lag_")) %>%
       na.omit()
@@ -361,7 +361,7 @@ horizon_sensitivity_table <- function(data,
           ifelse(reject_05 == "Reject", "***", "")
         )
       ) %>%
-      select(country, H, display)
+      dplyr::select(country, H, display)
     
     store[[idx]] <- jt
     idx <- idx + 1

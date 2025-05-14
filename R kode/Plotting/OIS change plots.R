@@ -22,8 +22,8 @@ library(hms)
 # ---------------------------------------------------------------------------
 user <- Sys.info()[["user"]]
 
-if      (user == "OscarEAM") {
-  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB")
+if (user == "OscarEAM") {
+  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Økonomi - Kandidat/OscarErnst-Heterogenous-spillover-ECB")
 } else if (user == "B362561") {
   setwd("C:/Users/B362561/Desktop/OscarErnst-Heterogenous-spillover-ECB-3")
 } else if (user == "kasper") {

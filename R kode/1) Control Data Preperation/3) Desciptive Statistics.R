@@ -4,12 +4,14 @@
 rm(list = ls()); cat("\014")
 
 user <- Sys.info()[["user"]]
-if      (user == "OscarEAM") {
-  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB")
+if (user == "OscarEAM") {
+  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Økonomi - Kandidat/OscarErnst-Heterogenous-spillover-ECB")
+} else if (user == "Oscar_dream") {
+  setwd("HER_INDSÆT_STI_FOR_OSCAR_DREAM")
 } else if (user == "kasper") {
   setwd("/Users/kasper/Documents/GitHub/OscarErnst-Heterogenous-spillover-ECB")
 } else {
-  stop("Ukendt bruger – tilføj sti.")
+  stop("Ukendt bruger – tilføj sti for denne bruger.")
 }
 
 source(file.path("R kode","Functions","Functions.R"))

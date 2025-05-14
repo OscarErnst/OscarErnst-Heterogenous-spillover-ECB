@@ -6,7 +6,7 @@ cat("\014")
 user <- Sys.info()[["user"]]
 
 if (user == "OscarEAM") {
-  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/OscarErnst-Heterogenous-spillover-ECB")
+  setwd("/Users/OscarEAM/Library/CloudStorage/OneDrive-UniversityofCopenhagen/Økonomi - Kandidat/OscarErnst-Heterogenous-spillover-ECB")
 } else if (user == "Oscar_dream") {
   setwd("HER_INDSÆT_STI_FOR_OSCAR_DREAM")
 } else if (user == "kasper") {
